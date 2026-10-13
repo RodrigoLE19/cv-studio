@@ -1,0 +1,1089 @@
+<div class="cv-editor-page min-h-dvh bg-canvas">
+    <header
+        class="editor-header flex flex-wrap items-center justify-between gap-4
+                border-b border-slate-200 bg-white px-5 py-5 sm:px-10"
+    >
+        <a routerLink="/" class="text-xl font-bold text-brand">
+            CV Studio 
+        </a>
+
+        <div class="flex flex-wrap items-center gap-3">
+            <a
+                routerLink="/"
+                class="rounded-lg px-4 py-3 text-sm font-semibold text-slate-600"
+            >
+                ← Mis CV
+            </a>
+
+            <button
+                type="button"
+                (click)="changeTemplate()"
+                class="rounded-lg bg-blue-50 px-4 py-3
+                        text-sm font-semibold text-brand"
+            >
+                Cambiar a {{ template === 'classic' ? 'Moderna' : 'Clásica' }}
+            </button>
+
+            <button
+                type="button"
+                (click)="exportPdf()"
+                class="rounded-lg bg-brand px-5 py-3
+                        text-sm font-semibold text-white hover:bg-brand-dark"
+            >
+                Exportar PDF
+            </button>
+
+        </div>
+        
+    </header>
+
+    <main class="editor-main mx-auto max-w-7xl px-5 py-8 sm:px-10">
+        <div class="editor-heading mb-6">
+            <h1 class="text-2xl font-bold">Editor de currículum</h1>
+            <p
+                role="status"
+                class="mt-2 text-sm text-slate-600">
+                {{ saveStatus }}
+            </p>
+            <p class="mt-2 text-sm text-slate-500">
+                Completa tus datos y observa los cambios en la vista previa.
+            </p>
+        </div>
+
+        <div class="editor-layout grid items-start gap-8 lg:grid-cols-[1fr_1.3fr]">
+            <section class="editor-form rounded-xl border border-slate-200 bg-white p-6">
+
+                
+
+                <form 
+                    class="space-y-5"
+                    (input)="scheduleSave()"
+                    (change)="scheduleSave()"
+                >
+
+                    <section class="border-b border-slate-200 pb-6">
+                        <h2 class="mb-4 text-lg font-bold">Diseño del CV</h2>
+
+                        <div class="grid gap-4 sm:grid-cols-2">
+                            <label class="block text-sm font-semibold">
+                                Color principal
+                                <select 
+                                    name="design-color"
+                                    [(ngModel)]="design.color"
+                                    class="mt-2 w-full rounded-lg border border-slate-300
+                                            bg-white px-3 py-3 font-normal"
+                                >
+                                    <option value="blue">Azul</option>
+                                    <option value="teal">Verde petróleo</option>
+                                    <option value="purple">Morado</option>
+                                    <option value="slate">Gris Oscuro</option>
+                                </select>
+                            </label>
+
+                            <label class="block text-sm font-semibold">
+                                Tipografía
+                                <select 
+                                    name="design.font"
+                                    [(ngModel)]="design.font"
+                                    class="mt-2 w-full rounded-lg border border-slate-300
+                                            bg-white px-3 py-3 font-normal"
+                                >
+                                    <option value="sans">Arial</option>
+                                    <option value="serif">Georgia</option>
+                                    <option value="mono">Courier New</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <fieldset class="mt-6">
+                            <legend class="text-sm font-semibold">Secciones visibles</legend>
+
+                                <div class="mt-3 grid gap-3 sm:grid-cols-2">
+                                    @for (section of sectionOptions; track section.key) {
+                                    <label class="flex min-h-11 items-center gap-3 text-sm">
+                                        <input
+                                        type="checkbox"
+                                        [checked]="isSectionVisible(section.key)"
+                                        (change)="toggleSection(section.key)"
+                                        class="size-4 accent-brand"
+                                        >
+                                        {{ section.label }}
+                                    </label>
+                                    }
+                                </div>
+
+                                <p class="mt-2 text-xs leading-relaxed text-slate-500">
+                                    Ocultar una sección conserva sus datos. Las secciones vacías
+                                    no aparecen en el currículum.
+                                </p>
+                            </fieldset>
+
+                    </section>
+
+                    <h2 class="mb-5 text-lg font-bold">Dastos personales</h2>
+
+                    <div>
+                        <label for="name" class="mb-2 block text-sm font-semibold">
+                            Nombre Completo
+                        </label>
+                        <input
+                            id="name"
+                            name="name"
+                            [(ngModel)]="cv.name"
+                            autocomplete="name"
+                            placeholder="Tu nombre completo"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                    focus:border-brand focus:outline-2
+                                    focus:outline-blue-200"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="title" class="mb-2 block text-sm font-semibold">
+                            Título profesional
+                        </label>
+                        <input
+                            id="title"
+                            name="title"
+                            [(ngModel)]="cv.title"
+                            placeholder="Ej. Desarrollador Frontend"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                    focus:border-brand focus:outline-2
+                                    focus:outline-blue-200"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="email" class="mb-2 block text-sm font-semibold">
+                            Correo electrónico
+                        </label>
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            [(ngModel)]="cv.email"
+                            autocomplete="email"
+                            placeholder="correo@ejemplo.com"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                    focus:border-brand focus:outline-2
+                                    focus:outline-blue-200"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="phone" class="mb-2 block text-sm font-semibold">
+                            Teléfono
+                        </label>
+                        <input
+                            id="phone"
+                            name="phone"
+                            type="tel"
+                            [(ngModel)]="cv.phone"
+                            autocomplete="tel"
+                            placeholder="Tu número de contacto"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                    focus:border-brand focus:outline-2
+                                    focus:outline-blue-200"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="city" class="mb-2 block text-sm font-semibold">
+                            Ciudad y país
+                        </label>
+                        <input
+                            id="city"
+                            name="city"
+                            [(ngModel)]="cv.city"
+                            placeholder="Ej. Trujillo, Perú"
+                            class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                    focus:border-brand focus:outline-2
+                                    focus:outline-blue-200"
+                        >
+                    </div>
+
+                    <div>
+                        <label for="profile" class="mb-2 block text-sm font-semibold">
+                            Perfil profesional
+                        </label>
+                        <textarea
+                            id="profile"
+                            name="profile"
+                            [(ngModel)]="cv.profile"
+                            rows="5"
+                            placeholder="Describe tu experiencia, habílidades y objetivos."
+                            class="w-full resize-y rounded-lg border border-slate-300 px-3 py-3
+                                    focus:border-brand focus:outline-2
+                                    focus:outline-blue-200"
+                        ></textarea>
+                    </div>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">Experiencia laboral</h2>
+
+                            <button
+                                type="button"
+                                (click)="addExperience()"
+                                class="rounded-lg bg-blue-50 px-4 py-3
+                                        text-sm font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for (item of cv.experiences; track item.id; let i = $index) {
+                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
+                                <legend class="px-2 text-sm font-semibold">
+                                    Experiencia {{ i + 1 }}
+                                </legend>
+
+                                <div class="space-y-4">
+                                    <label class="block text-sm font-semibold">
+                                        Puesto
+
+                                        <input
+                                            [(ngModel)]="item.position"
+                                            [name]="'position-' + item.id"
+                                            placeholder="Ej. Asistente administrativo"
+                                            class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal">
+                                    </label>
+
+                                    <label class="block text-sm font-semibold">
+                                        Empresa u organización
+
+                                        <input
+                                            [(ngModel)]="item.company"
+                                            [name]="'company-' + item.id"
+                                            class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal">
+                                    </label>
+
+                                    <div class="grid gap-4 sm:grid-cols-2">
+                                        <label class="block min-w-0 text-sm font-semibold">
+                                            Fecha de inicio
+                                            <input
+                                                type="month"
+                                                [(ngModel)]="item.startDate"
+                                                [name]="'experience-start-' + item.id"
+                                                [max]="!item.current && item.endDate ? item.endDate : null"
+                                                class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal"
+                                            >
+                                        </label>
+
+                                        <label class="block min-w-0 text-sm font-semibold">
+                                            Fecha de fin
+                                            <input
+                                                type="month"
+                                                [(ngModel)]="item.endDate"
+                                                [name]="'experience-end-' + item.id"
+                                                [disabled]="item.current"
+                                                [min]="item.startDate || null"
+                                                class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal disabled:bg-slate-100"
+                                            >
+                                        </label>
+                                    </div>
+
+                                    <label class="flex items-center gap-3 text-sm">
+                                        <input
+                                            type="checkbox"
+                                            [(ngModel)]="item.current"
+                                            [name]="'experience-current-' + item.id"
+                                            class="size-4 accent-brand"
+                                        >
+                                        Trabajo actualmente
+                                    </label>
+                                    
+                                    @if (
+                                        !item.current &&
+                                        item.startDate &&
+                                        item.endDate &&
+                                        item.endDate < item.startDate
+                                    ) {
+                                        <p role="alert" class="text-sm text-red-600">
+                                            La fecha de fin no puede ser anterior a la de inicio.
+                                        </p>
+                                    }
+
+                                    <label class="block text-sm font-semibold">
+                                        Responsabilidades y logros
+                                        <textarea
+                                            [(ngModel)]="item.description"
+                                            [name]="'experience-description-' + item.id"
+                                            rows="4"
+                                            placeholder="Describie tus funciones y principlaes logros."
+                                            class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal"
+                                        ></textarea>
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        (click)="removeExperience(item.id)"
+                                        [attr.aria-label]="'Eliminar experiencia' + (i +1)"
+                                        class="rounded-lg px-3 py-2 text-sm
+                                                font-medium text-red-600 hover:bg-red-50"
+                                    >
+                                        Eliminar experiencia
+                                    </button>
+                                </div>
+                            </fieldset>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Todavia no has añadido experiencias. 
+                            </p>
+                        }
+                    </section>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">Educación</h2>
+
+                            <button
+                                type="button"
+                                (click)="addEducation()"
+                                class="rounded-lg bg-blue-50 px-4 py-3
+                                        text-sm font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for(item of cv.education; track item.id; let i = $index) {
+                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
+                                <legend class="px-2 text-sm font-semibold">
+                                    Formación {{ i + 1 }}
+                                </legend>
+
+                                <div class="space-y-4">
+                                    <label class="block text-sm font-semibold">
+                                        Carrera, grado o título
+                                        <input
+                                            [(ngModel)]="item.degree"
+                                            [name]="'dregree-' + item.id"
+                                            placeholder="Ej. Ingeniería de Sistemas"
+                                            class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal"
+                                        >
+                                    </label>
+
+                                    <label class="block text-sm font-semibold">
+                                        Institución
+                                        <input
+                                            [(ngModel)]="item.institution"
+                                            [name]="'institution-' + item.id"
+                                            class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal"
+                                        >
+                                    </label>
+
+                                    <div class="grid gap-4 sm:grid-cols-2">
+                                        <label class="block min-w-0 text-sm font-semibold">
+                                            Fecha de inicio
+                                            <input
+                                                type="month"
+                                                [(ngModel)]="item.startDate"
+                                                [name]="'education-start-' + item.id"
+                                                [max]="!item.ongoing && item.endDate ? item.endDate : null"
+                                                class="mt-2 w-full min-w-0 rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal"
+                                        >
+                                        </label>
+
+                                        <label class="block min-w-0 text-sm font-semibold">
+                                            Fecha de fin
+                                            <input
+                                                type="month"
+                                                [(ngModel)]="item.endDate"
+                                                [name]="'education-end-' + item.id"
+                                                [disabled]="item.ongoing"
+                                                [min]="item.startDate || null"
+                                                class="mt-2 w-full min-w-0 rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal disabled:bg-slate-100"
+                                            >
+                                        </label>
+                                    </div>
+
+                                    <label class="flex items-center gap-3 text-sm">
+                                        <input 
+                                            type="checkbox"
+                                            [(ngModel)]="item.ongoing"
+                                            [name]="'education-ongoing-' + item.id"
+                                            class="size-4 accent-brand"
+                                        >
+                                        Actualmente estoy estudiando
+                                    </label>
+
+                                    @if (
+                                        !item.ongoing &&
+                                        item.startDate &&
+                                        item.endDate &&
+                                        item.endDate < item.startDate
+                                    ) {
+                                        <p role="alert" class="text-sm text-red-600">
+                                            La fecha de fin no puede ser anterior a la de inicio.
+                                        </p>
+                                    }
+
+                                    <label class="block text-sm font-semibold">
+                                        Información adicional
+                                        <textarea
+                                            [(ngModel)]="item.description"
+                                            [name]="'education-description-' + item.id"
+                                            rows="3"
+                                            placeholder="Ej. Estado de los estudios, especialidad o logros."
+                                            class="mt-2 w-full rounded-lg border border-slate-300
+                                                    bg-white px-3 py-3 font-normal"
+                                        ></textarea>
+                                    </label>
+
+                                    <button
+                                        type="button"
+                                        (click)="removeEducation(item.id)"
+                                        [attr.aria-label]="'Eliminar formación' + (i +1)"
+                                        class="rounded-lg px-3 py-2 text-sm
+                                                font-medium text-red-600 hover:bg-red-50"
+                                    >
+                                        Eliminar formación
+                                    </button>
+                                </div>
+                            </fieldset>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Todavia no has añadido estudios. 
+                            </p>
+                        }
+
+                    </section>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">Habilidades</h2>
+
+                            <button
+                                type="button"
+                                (click)="addSkill()"
+                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
+                                        font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for (item of cv.skills; track item.id; let i = $index) {
+                            <div class="mt-4">
+                                <label
+                                    [for]="'skill-' + item.id"
+                                    class="mb-2 block text-sm font-semibold">
+                                    Habilidad {{ i + 1 }}
+                                </label>
+
+                                <div class="flex items-center gap-2">
+                                    <input
+                                        [id]="'skill-' + item.id"
+                                        [name]="'skill-' + item.id"
+                                        [(ngModel)]="item.name"
+                                        placeholder="Ej. Excel, trabajo en equipo o Angular"
+                                        class="min-w-0 flex-1 rounded-lg border
+                                                border-slate-300 px-3 py-3"
+                                    >
+
+                                    <button
+                                        type="button"
+                                        (click)="removeSkill(item.id)"
+                                        [attr.aria-label]="'Eliminar habilidad' + (i + 1)"
+                                        class="min-h-11 rounded-lg px-3 text-sm
+                                                text-red-600 hover:bg-red-50"
+                                    >
+                                        Eliminar
+                                    </button>
+                                </div>
+                            </div>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Añade tus competencia técnicas y personales. 
+                            </p>
+                        }
+                    </section>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">Idiomas</h2>
+
+                            <button
+                                type="button"
+                                (click)="addLanguage()"
+                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
+                                        font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for (item of cv.languages; track item.id; let i = $index) {
+                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
+                                <legend class="px-2 text-sm font-semibold">
+                                    Idioma {{ i + 1 }}
+                                </legend>
+
+                                <label class="block text-sm font-semibold">
+                                    Idioma
+                                    <input
+                                        [(ngModel)]="item.name"
+                                        [name]="'language-name-' + item.id"
+                                        placeholder="Ej. Español o inglés"
+                                        class="mt-2 w-full rounded-lg border
+                                                border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                </label>
+
+                                <label class="mt-4 block text-sm font-semibold">
+                                    Nivel
+                                    <select
+                                        [(ngModel)]="item.level"
+                                        [name]="'language-level-' + item.id"
+                                        class="mt-2 w-full rounded-lg border
+                                                border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                        <option value="">Sin especificar</option>
+                                        <option value="Nativo">Nativo</option>
+                                        <option value="Básico">Básico</option>
+                                        <option value="Intermedio">Intermedio</option>
+                                        <option value="Avanzado">Avanzado</option>
+                                        <option value="A1">A1</option>
+                                        <option value="A2">A2</option>
+                                        <option value="B1">B1</option>
+                                        <option value="B2">B2</option>
+                                        <option value="C1">C1</option>
+                                        <option value="C2">C2</option>
+                                    </select>
+                                </label>
+
+                                <button
+                                    type="button"
+                                    (click)="removeLanguage(item.id)"
+                                    [attr.aria-label]="'Eliminar idioma' + (i + 1)"
+                                    class="mt-4 rounded-lg px-3 py-3 text-sm
+                                                text-red-600 hover:bg-red-50"
+                                >
+                                    Eliminar idioma
+                                </button>
+                            </fieldset>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Todavía no has añadido idiomas.
+                            </p>
+                        }
+                    </section>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">Cursos y certificaciones</h2>
+
+                            <button
+                                type="button"
+                                (click)="addCertification()"
+                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
+                                        font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for (item of cv.certifications; track item.id; let i = $index) {
+                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
+                                <legend class="px-2 text-sm font-semibold">
+                                    Curso o certificación {{ i + 1 }}
+                                </legend>
+
+                                <label class="block text-sm font-semibold">
+                                    Nombre
+                                    <input
+                                        [(ngModel)]="item.name"
+                                        [name]="'certification-name-' + item.id"
+                                        placeholder="Ej. Excel intermedio"
+                                        class="mt-2 w-full rounded-lg border
+                                                border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                </label>
+
+                                <label class="mt-4 block text-sm font-semibold">
+                                    Institución o entidad
+                                    <input
+                                        [(ngModel)]="item.issuer"
+                                        [name]="'certification-issuer-' + item.id"
+                                        class="mt-2 w-full rounded-lg border
+                                                border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                </label>
+
+                                <label class="mt-4 block text-sm font-semibold">
+                                    Fecha de obtención
+                                    <input
+                                        type="month"
+                                        [(ngModel)]="item.date"
+                                        [name]="'certification-date-' + item.id"
+                                        class="mt-2 w-full rounded-lg border
+                                                border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                </label>
+
+                                <button
+                                    type="button"
+                                    (click)="removeCertification(item.id)"
+                                    [attr.aria-label]="'Eliminar curso o certificación' + (i + 1)"
+                                    class="mt-4 rounded-lg px-3 py-3 text-sm
+                                                text-red-600 hover:bg-red-50"
+                                >
+                                    Eliminar registro
+                                </button>
+                            </fieldset>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Todavía no has añadido cursos o certificaciones.
+                            </p>
+                        }
+                    </section>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">
+                                Proyectos
+                            </h2>
+
+                            <button
+                                type="button"
+                                (click)="addProject()"
+                                class="rounded-lg bg-blue-50 px-4 py-3
+                                        text-sm font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for (item of cv.projects; track item.id; let i = $index) {
+                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
+                                <legend class="px-2 text-sm font-semibold">
+                                    Proyecto {{ i + 1 }}
+                                </legend>
+
+                                <div class="space-y-4">
+                                    <label class="block text-sm font-semibold">
+                                        Nombre del proyecto
+                                        <input
+                                            [(ngModel)]="item.name"
+                                            [name]="'project-name-' + item.id"
+                                            placeholder="Ej. Finora"
+                                            class="mt-2 w-full rounded-lg border
+                                                    border-slate-300 px-3 py-3 font-normal"
+                                        >
+                                    </label>
+
+                                    <label class="block text-sm font-semibold">
+                                        Descripción y aportes
+                                        <textarea
+                                            [(ngModel)]="item.description"
+                                            [name]="'project-description-' + item.id"
+                                            rows="4"
+                                            placeholder="Describie el proyecyo y que realizaste."
+                                            class="mt-2 w-full rounded-lg border
+                                                    border-slate-300 px-3 py-3 font-normal"
+                                        ></textarea>
+                                    </label>
+
+                                    <label class="block text-sm font-semibold">
+                                        Tecnologías o herramientas - opcional
+                                        <input
+                                            [(ngModel)]="item.technologies"
+                                            [name]="'project-technologies-' + item.id"
+                                            placeholder="Ej. Angular, TypeScript y Tailwind CSS"
+                                            class="mt-2 w-full rounded-lg border
+                                                    border-slate-300 px-3 py-3 font-normal"
+                                        >
+                                    </label>
+
+                                    <label class="block text-sm font-semibold">
+                                        Enlace - opcional
+                                        <input
+                                            type="url"
+                                            [(ngModel)]="item.url"
+                                            [name]="'project-url-' + item.id"
+                                            placeholder="https://..."
+                                            class="mt-2 w-full rounded-lg border
+                                                    border-slate-300 px-3 py-3 font-normal"
+                                        >
+                                    </label>
+
+                                    @if (item.url.trim() && !safeUrl(item.url)) {
+                                        <p role="alert" class="text-sm text-red-600">
+                                            Introduce un enlace completo que empiece con https:// o http://.
+                                        </p>
+                                    }
+
+                                    <button
+                                        type="button"
+                                        (click)="removeProject(item.id)"
+                                        [attr.aria-label]="'Eliminar proyecto' + (i + 1)"
+                                        class="rounded-lg px-3 py-2 text-sm
+                                                text-red-600 hover:bg-red-50"
+                                    >
+                                        Eliminar proyecto
+                                    </button>
+                                </div>
+                            </fieldset>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Puedes añadir proyectos personlaes, académicos o profesionales.
+                            </p>
+                        }
+                    </section>
+
+                    <section class="border-t border-slate-200 pt-6">
+                        <div class="flex flex-wrap items-center justify-between gap-3">
+                            <h2 class="text-lg font-bold">Enlaces profesiones</h2>
+                            <button
+                                type="button"
+                                (click)="addLink()"
+                                class="rounded-lg bg-blue-50 px-4 py-3
+                                        text-sm font-semibold text-brand hover:bg-blue-100"
+                            >
+                                + Añadir
+                            </button>
+                        </div>
+
+                        @for (item of cv.links; track item.id; let i = $index) {
+                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
+                                <legend class="px-2 text-sm font-semibold">
+                                    Enlace {{ i + 1 }}
+                                </legend>
+
+                                <label class="block text-sm font-semibold">
+                                    Nombre del enlace
+                                    <input
+                                        [(ngModel)]="item.label"
+                                        [name]="'link-label-' + item.id"
+                                        placeholder="Ej. LinkedIn, portafolio o GitHub"
+                                        class="mt-2 w-full rounded-lg border
+                                                 border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                </label>
+
+                                <label class="mt-4 block text-sm font-semibold">
+                                    Dirección 
+                                    <input
+                                        type="url"
+                                        [(ngModel)]="item.url"
+                                        [name]="'link-url-' + item.id"
+                                        placeholder="https://..."
+                                        class="mt-2 w-full rounded-lg border
+                                                    border-slate-300 px-3 py-3 font-normal"
+                                    >
+                                </label>
+
+                                @if (item.url.trim() && !safeUrl(item.url)) {
+                                    <p role="alert" class="mt-2 text-sm text-red-600">
+                                        Introduce un enlace completo que empiece con https:// o http://. 
+                                    </p>
+                                }
+
+                                <button
+                                    type="button"
+                                        (click)="removeLink(item.id)"
+                                        [attr.aria-label]="'Eliminar enlace' + (i + 1)"
+                                        class="mt-4 rounded-lg px-3 py-2 text-sm
+                                                text-red-600 hover:bg-red-50"
+                                >
+                                    Eliminar enlace 
+                                </button>
+                            </fieldset>
+                        } @empty {
+                            <p class="mt-4 text-sm text-slate-500">
+                                Añade los enlaces que quieras incluir en tu CV.
+                            </p>
+                        }
+                    </section>
+                </form>
+            </section>
+
+            <section aria-label="Vista previa del currículum" class="cv-preview min-w-0 lg:sticky lg:top-6">
+                <p class="preview-label mb-3 text-sm text-slate-500">
+                    Plantilla {{ template === 'modern' ? 'Moderna' : 'Clásica' }}
+                </p>
+                <div class="preview-frame rounded-xl bg-slate-100 p-3 sm:p-6
+                            "
+                >
+                    <article
+                        class="cv-sheet min-h-[600px] overflow-hidden bg-white shadow-md
+                                [overflow-wrap:anywhere]"
+                        [class.grid]="template === 'modern'"
+                        [class.grid-cols-[32%_68%]]="template === 'modern'"
+                        [style.--cv-accent]="accentColor"
+                        [style.--cv-soft]="softColor"
+                        [style.font-family]="documentFont"
+                    >
+                        @if (template === 'modern') {
+                            <aside class="min-w-0 bg-blue-50 p-3 sm:p-5">
+                                <div
+                                    class="grid size-12 place-items-center rounded-xl
+                                            bg-brand font-bold text-white"
+                                >
+                                    {{ initials }}
+                                </div>
+
+                                @if (cv.email || cv.phone || cv.city) {
+                                    <h2 class="mt-8 text-xs font-bold uppercase text-brand">
+                                        Contacto
+                                    </h2>
+
+                                    <div class="mt-3 space-y-3 text-xs text-slate-600">
+                                        @if (cv.city) {
+                                            <p> {{ cv.city }} </p>
+                                        }
+                                        @if (cv.email) {
+                                            <p> {{ cv.email }} </p>
+                                        }
+                                        @if (cv.phone) {
+                                            <p> {{ cv.phone }} </p>
+                                        }
+                                    </div>
+                                }
+                                <ng-container [ngTemplateOutlet]="skillsAndLanguages"></ng-container>
+                            </aside>
+                        }
+
+                        <div class="min-w-0 p-4 sm:p-8">
+                            <div
+                                class="border-b border-slate-200 pb-5"
+                                [class.text-center]="template === 'classic'"
+                            >
+                                <h2 class="text-xl font-bold sm:text-2xl">
+                                    {{ cv.name || 'Tu nombre completo' }}
+                                </h2>
+
+                                <p class="mt-2 text-sm font-medium text-brand">
+                                    {{ cv.title || 'Tu título profesional' }}
+                                </p>
+
+                                @if (template === 'classic') {
+                                    <div
+                                        class="mt-4 flex flex-wrap justify-center gap-x-4
+                                                gap-y-2 text-xs text-slate-500"
+                                    >
+                                        @if (cv.city) {
+                                            <span> {{ cv.city }} </span>
+                                        }
+                                        @if (cv.email) {
+                                            <span> {{ cv.email }} </span>
+                                        }
+                                        @if (cv.phone) {
+                                            <span> {{ cv.phone }} </span>
+                                        }
+                                    </div>
+                                }
+                            </div>
+
+                            @if (isSectionVisible('profile') && cv.profile.trim()) {
+                                <section class="mt-6">
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                        Perfil profesional
+                                    </h3>
+                                    <p
+                                        class="mt-3 whitespace-pre-line text-sm
+                                                leading-relaxed text-slate-600"
+                                    >
+                                        {{ cv.profile }}
+                                    </p>
+                                </section>
+                            }
+
+                            @if (isSectionVisible('experiences') && visibleExperiences.length) {
+                                <section class="mt-6">
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                        Experiencia laboral
+                                    </h3>
+
+                                    @for (item of visibleExperiences; track item.id) {
+                                        <div class="cv-entry mt-4">
+                                            <h4 class="text-sm font-semibold"> {{ item.position }} </h4>
+                                            <p class="mt-1 text-sm text-brand"> {{ item.company }} </p>
+
+                                            <p class="mt-1 text-xs text-slate-500">
+                                                {{ formatPeriod(item.startDate, item.endDate, item.current) }}
+                                            </p>
+
+                                            @if (item.description.trim()) {
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600">
+                                                    {{ item.description }}
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                </section>
+                            }
+
+                            @if (isSectionVisible('projects') && visibleProjects.length) {
+                                <section class="mt-6">
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                        Proyectos 
+                                    </h3>
+
+                                    @for (item of visibleProjects; track item.id) {
+                                        <div class="cv-entry mt-4">
+                                            <h4 class="text-sm font-semibold"> {{item.name}} </h4>
+
+                                            @if (item.technologies.trim()) {
+                                                <p class="mt-1 text-xs text-brand">
+                                                    {{ item.technologies }}
+                                                </p>
+                                            }
+
+                                            @if (item.description.trim()) {
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600">
+                                                    {{ item.description }}
+                                                </p>
+                                            }
+
+                                            @if (safeUrl(item.url); as url) {
+                                                <a
+                                                    [href]="url"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="mt-2 block text-xs text-brand underline
+                                                            [overflow-wrap:anywhere]"
+                                                >
+                                                    {{ item.url }}
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                </section>
+                            }
+
+                            @if (isSectionVisible('education') && visibleEducation.length) {
+                                <section class="mt-6">
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                        Educación
+                                    </h3>
+
+                                    @for (item of visibleEducation; track item.id) {
+                                        <div class="cv-entry mt-4">
+                                            <h4 class="text-sm font-semibold"> {{ item.degree }} </h4>
+                                            <p class="mt-1 text-sm text-brand"> {{ item.institution }} </p>
+
+                                            <p class="mt-1 text-xs text-slate-500">
+                                                {{ formatPeriod(item.startDate, item.endDate, item.ongoing) }}
+                                            </p>
+
+                                            @if (item.description.trim()) {
+                                                <p class="mt-2 whitespace-pre-line text-sm leading-relaxed text-slate-600">
+                                                    {{ item.description }}
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                </section>
+                            }
+
+                            @if (template === 'classic') {
+                                <ng-container [ngTemplateOutlet]="skillsAndLanguages"></ng-container>
+                            }
+
+                            @if (isSectionVisible('certifications') && visibleCertifications.length) {
+                                <section class="mt-6">
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                        Cursos y certificaciones
+                                    </h3>
+
+                                    @for (item of visibleCertifications; track item.id) {
+                                        <div class="cv-entry mt-4">
+                                            <h4 class="text-sm font-semibold"> {{ item.name }} </h4>
+
+                                            @if (item.issuer.trim()) {
+                                                <p class="mt-1 text-sm text-slate-600"> {{ item.issuer }} </p>
+                                            }
+                                            @if (item.date) {
+                                                <p class="mt-1 text-xs text-slate-500">
+                                                    {{ formatCertificationDate(item.date) }}
+                                                </p>
+                                            }
+                                        </div>
+                                    }
+                                </section>
+                            }
+
+                        </div>
+
+                        <ng-template #skillsAndLanguages>
+                            @if (isSectionVisible('links') &&  visibleLinks.length) {
+                                <section class="mt-6">
+                                    <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                        Enlaces
+                                    </h3>
+
+                                    <ul class="mt-3 space-y-3 text-xs">
+                                        @for (item of visibleLinks; track item.id) {
+                                            <li>
+                                                <span class="block font-semibold"> {{ item.label }} </span>
+
+                                                <a
+                                                    [href]="safeUrl(item.url)"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    class="mt-1 bloc text-brand underline
+                                                            [overflow-wrap:anywhere]"
+                                                >
+                                                    {{ item.url }}
+                                                </a>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </section>
+                            }
+                            @if (isSectionVisible('skills') && visibleSkills.length) {
+                                <section class="mt-6">
+                                <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                    Habilidades
+                                </h3>
+
+                                <ul class="mt-3 flex flex-wrap gap-2">
+                                    @for (item of visibleSkills; track item.id) {
+                                    <li
+                                        class="max-w-full rounded bg-blue-50 px-2 py-1
+                                            text-xs text-slate-700"
+                                    >
+                                        {{ item.name }}
+                                    </li>
+                                    }
+                                </ul>
+                                </section>
+                            }
+
+                            @if (isSectionVisible('languages') && visibleLanguages.length) {
+                                <section class="mt-6">
+                                <h3 class="text-xs font-bold uppercase tracking-wide text-brand">
+                                    Idiomas
+                                </h3>
+
+                                <ul class="mt-3 space-y-2 text-xs text-slate-600">
+                                    @for (item of visibleLanguages; track item.id) {
+                                    <li>
+                                        <span class="font-semibold">{{ item.name }}</span>
+                                        @if (item.level) {
+                                        <span> · {{ item.level }}</span>
+                                        }
+                                    </li>
+                                    }
+                                </ul>
+                                </section>
+                            }
+                            </ng-template>
+                    </article>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>

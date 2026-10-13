@@ -1,1 +1,105 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #0854d5;
+  --color-brand-dark: #0644ad;
+  --color-canvas: #f7f8fc;
+}
+
+@layer base {
+  body {
+    @apply m-0 bg-canvas font-sans text-slate-900;
+  }
+
+  button:not(:disabled),
+  a {
+    cursor: pointer;
+  }
+
+  button:focus-visible,
+  a:focus-visible {
+    @apply outline-2 outline-offset-4 outline-blue-400;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 15mm;
+}
+
+@media print {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+
+  .editor-header,
+  .editor-heading,
+  .editor-form,
+  .preview-label {
+    display: none !important;
+  }
+
+  .cv-editor-page,
+  .editor-main,
+  .editor-layout,
+  .cv-preview,
+  .preview-frame {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: visible !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .cv-sheet {
+    width: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .cv-sheet h2,
+  .cv-sheet h3,
+  .cv-sheet h4 {
+    break-after: avoid;
+  }
+
+  .cv-sheet p {
+    orphans: 3;
+    widows: 3;
+  }
+
+  .cv-sheet .cv-entry {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+
+.cv-sheet .text-brand {
+  color: var(--cv-accent,  #0854d5);
+}
+
+.cv-sheet .bg-brand {
+  background-color: var(--cv-accent, #0854d5);
+}
+
+.cv-sheet .bg-blue-50 {
+  background-color: var(--cv-soft, #eff6ff);
+}

@@ -1,0 +1,193 @@
+<div class="min-h-dvh bg-canvas">
+    <header class="border-b border-slate-200 bg-white px-5 py-5 sm:px-10">
+        <a routerLink="/" class="inline-flex items-center gap-3 text-xl font-bold">
+            <span
+                aria-hidden="true"
+                class="grid size-11 place-items-center rounded-xl
+                        bg-brand text-sm text-white"
+            >
+                CV
+            </span>
+            CV Studio 
+        </a>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-5 py-8 sm:px-10">
+        <a
+            routerLink="/"
+            class="inline-flex min-h-11 items-center font-medium
+                    text-slate-600 hover:text-brand"
+        >
+            ← Volver a Mis CV
+        </a>
+
+        <div class="my-8 text-center">
+            <h1 class="text-3xl font-bold sm:text-4xl">
+                Elige tu plantilla 
+            </h1>
+
+            <p class="mx-auto mt-4 max-w-2xl leading-relaxed text-slate-500">
+                Selecciona un diseño para emprezar. Podrás cambiarlo
+                después sin perder tu información.
+            </p>
+        </div>
+
+        <div class="grid gap-5 md:grid-cols-2">
+            <button
+                type="button"
+                (click)="selectTemplate('classic')"
+                [attr.aria-pressed]="selectedTemplate() === 'classic'"
+                [class.border-brand]="selectedTemplate() === 'classic'"
+                [class.border-slate-200]="selectedTemplate() !== 'classic'"
+                class="min-w-0 rounded-2xl border-2 bg-white p-5
+                        text-left transition-colors hover:bg-blue-50/30"
+            >
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h2 class="text-xl font-bold">Clásica</h2>
+
+                    @if (selectedTemplate() === 'classic') {
+                        <span class="rounded-full bg-brand px-3 py-1 text-xs text-white">
+                            ✓ Seleccionada
+                        </span>
+                    }
+                </div>
+
+                <p class="mt-2 text-sm leading-relaxed text-slate-500">
+                    Una columna, encabezado centrado y secciones claras.
+                </p>
+
+                <div class="mt-6 rounded-xl bg-slate-100 p-4 sm:p-6">
+                    <div
+                        aria-hidden="true"
+                        class="mx-auto aspect-[210/297] w-full max-w-72
+                                bg-white p-5 text-slate-800 shadow-md"
+                    >
+                        <div class="border-b border-slate-200 pb-4 text-center">
+                            <p class="text-sm font-bold">Rodrigo Estrada Leon</p>
+                            <p class="mt-1 text-xs text-brand">Desarrollador Frontend</p>
+                            <p class="mt-2 text-[10px]">Trujillo, Perú</p>
+                        </div>
+
+                        <p class="mt-5 text-[10px] font-bold uppercase text-brand">
+                            Proyectos
+                        </p>
+
+                        <p class="mt-3 text-xs font-semibold">Finora</p>
+                        <p class="mt-1 text-[10px] leading-relaxed">
+                            Aplicación web para estionar ingresos, gastos y presupuestos.
+                        </p>
+
+                        <p class="mt-4 text-xs font-semibold">Respira Fácil</p>
+                        <p class="mt-1 text-[10px] leading-relaxed">
+                            Aplicación móvil para evaluar el riesgo de crisis asmática.
+                        </p>
+
+                        <p class="mt-5 text-[10px] font-bold uppercase text-brand">
+                            Habílidades
+                        </p>
+                        <p class="mt-2 text-[10px] leading-relaxed">
+                            Angular · TypeScript · HTML · CSS 
+                        </p>
+                    </div>
+                </div>
+            </button>
+
+            <button
+                type="button"
+                (click)="selectTemplate('modern')"
+                [attr.aria-pressed]="selectedTemplate() === 'modern'"
+                [class.border-brand]="selectedTemplate() === 'modern'"
+                [class.border-slate-200]="selectedTemplate() !== 'modern'"
+                class="min-w-0 rounded-2xl border-2 bg-white p-5
+                        text-left transition-colors hover:bg-blue-50/30"
+            >
+                <div class="flex flex-wrap items-center justify-between gap-2">
+                    <h2 class="text-xl font-bold">Moderna</h2>
+
+                    @if (selectedTemplate() === 'modern') {
+                        <span class="rounded-full bg-brand px-3 py-1 text-xs text-white">
+                            ✓ Seleccionada
+                        </span>
+                    }
+                </div>
+
+                <p class="mt-2 text-sm leading-relaxed text-slate-500">
+                    Dos columnas, contacto laboral y espacio para tus proyectos.
+                </p>
+
+                <div class="mt-6 rounded-xl bg-slate-100 p-4 sm:p-6">
+                    <div
+                        aria-hidden="true"
+                        class="mx-auto grid aspect-[210/297] w-full max-w-72
+                                grid-cols-[32%_68%] bg-white text-slate-800 shadow-md"
+                    >
+                        <div class="bg-blue-50 p-3">
+                            <div
+                                class="grid size-10 place-items-center rounded-lg
+                                        bg-brand text-sm font-bold text-white"
+                            >
+                                RE 
+                            </div>
+
+                            <p class="mt-5 text-[9px] font-bold uppercase">Contacto</p>
+                            <p class="mt-2 text-[9px]">Trujillo, Perú</p>
+
+                            <p class="mt-5 text-[9px] font-bold uppercase">Habílidades</p>
+                            <p class="mt-2 text-[9px] leading-loose">
+                                Angular <br>
+                                TypeScript <br>
+                                HTML y CSS <br>
+                            </p>
+                        </div>
+
+                        <div class="p-3">
+                            <p class="text-sm font-bold">Rodrigo Estrada Leon</p>
+                            <p class="mt-1 text-[10px] text-brand">
+                                Desarrollador Frontend
+                            </p>
+
+                            <p
+                                class="mt-5 border-t border-slate-200 pt-3
+                                        text-[10px] font-bold uppercase text-brand"
+                            >
+                                Proyectos
+                            </p>
+
+                            <p class="mt-3 text-xs font-semibold">Finora</p>
+                            <p class="mt-1 text-[10px] leading-relaxed">
+                                Aplicación web para gestionar ingresos, gastos y presupuestos.
+                            </p>
+
+                            <p class="mt-4 text-xs font-semibold">Respira Fácil</p>
+                            <p class="mt-1 text-[10px] leading-relaxed">
+                                Aplicación móvil para evaluar el riesgo de crisis asmática.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </button>
+        </div>
+
+        <div
+            class="mt-8 flex flex-col gap-4 rounded-xl border
+                    border-slate-200 bg-white p-5 sm:flex-row
+                    sm:items-center sm:justify-between"
+        >
+            <p class="text-sm text-slate-600" role="status">
+                Plantilla seleccionada:
+                <strong class="text-slate-900">
+                    {{ selectedTemplate() === 'classic' ? 'Clásica' : 'Moderna' }}
+                </strong>
+            </p>
+
+            <a 
+                routerLink="/editor"
+                [queryParams]="{ plantilla: selectedTemplate() }"
+                class="inline-flex min-h-12 items-center justify-center rounded-lg
+                        bg-brand px-6 py-3 font-semibold text-white"
+            >
+                Usar plantilla →
+            </a>
+        </div>
+    </main>
+</div>
