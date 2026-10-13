@@ -39,6 +39,8 @@ export class CvEditorComponent implements OnInit, OnDestroy {
 
   saveStatus = 'Sin cambios pendientes';
 
+  activeTab: 'content' | 'design' = 'content';
+
   design: CvDesign = {
     color: 'blue',
     font: 'sans',
