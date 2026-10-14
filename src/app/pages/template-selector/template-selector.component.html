@@ -1,24 +1,45 @@
 <div class="min-h-dvh bg-canvas">
-    <header class="border-b border-slate-200 bg-white px-5 py-5 sm:px-10">
-        <a routerLink="/" class="inline-flex items-center gap-3 text-xl font-bold">
-            <span
-                aria-hidden="true"
-                class="grid size-11 place-items-center rounded-xl
-                        bg-brand text-sm text-white"
-            >
-                CV
-            </span>
-            CV Studio 
-        </a>
+    <header class="border-b border-slate-200 bg-white">
+        <div
+            class="mx-auto flex max-w-6xl flex-wrap items-center
+                    justify-between gap-4 px-5 py-4 sm:px-10"
+        >
+            <a routerLink="/" class="inline-flex items-center gap-3">
+                <span
+                    aria-hidden="true"
+                    class="material-symbols-outlined rounded-lg
+                            bg-brand p-2 text-white"
+                >
+                    description
+                </span>
+
+                <span class="text-lg font-bold text-slate-900">
+                    CV Studio
+                </span>
+            </a>
+
+            <nav aria-label="Navegación principal">
+                <a
+                    routerLink="/"
+                    class="inline-flex rounded-lg px-3 py-2 text-sm
+                            font-medium text-slate-600 hover:bg-slate-100"
+                >
+                    Mis CV
+                </a>
+            </nav>
+        </div>
     </header>
 
     <main class="mx-auto max-w-6xl px-5 py-8 sm:px-10">
         <a
             routerLink="/"
-            class="inline-flex min-h-11 items-center font-medium
+            class="inline-flex min-h-11 items-center gap-2 text-sm font-medium
                     text-slate-600 hover:text-brand"
         >
-            ← Volver a Mis CV
+            <span class="material-symbols-outlined" aria-hidden="true">
+                arrow_back
+            </span>
+            Volver a Mis CV
         </a>
 
         <div class="my-8 text-center">
@@ -27,7 +48,7 @@
             </h1>
 
             <p class="mx-auto mt-4 max-w-2xl leading-relaxed text-slate-500">
-                Selecciona un diseño para emprezar. Podrás cambiarlo
+                Selecciona un diseño para empezar. Podrás cambiarlo
                 después sin perder tu información.
             </p>
         </div>
@@ -40,14 +61,19 @@
                 [class.border-brand]="selectedTemplate() === 'classic'"
                 [class.border-slate-200]="selectedTemplate() !== 'classic'"
                 class="min-w-0 rounded-2xl border-2 bg-white p-5
-                        text-left transition-colors hover:bg-blue-50/30"
+                        text-left shadow-sm transition hover:shadow-md"
             >
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <h2 class="text-xl font-bold">Clásica</h2>
 
                     @if (selectedTemplate() === 'classic') {
-                        <span class="rounded-full bg-brand px-3 py-1 text-xs text-white">
-                            ✓ Seleccionada
+                        <span class="inline-flex items-center gap-1 rounded-full
+                                     bg-brand px-3 py-1 text-xs font-semibold text-white"
+                        >
+                            <span class="material-symbols-outlined text-base" aria-hidden="true">
+                                check_circle
+                            </span>
+                            Seleccionada
                         </span>
                     }
                 </div>
@@ -74,7 +100,7 @@
 
                         <p class="mt-3 text-xs font-semibold">Finora</p>
                         <p class="mt-1 text-[10px] leading-relaxed">
-                            Aplicación web para estionar ingresos, gastos y presupuestos.
+                            Aplicación web para gestionar ingresos, gastos y presupuestos.
                         </p>
 
                         <p class="mt-4 text-xs font-semibold">Respira Fácil</p>
@@ -83,7 +109,7 @@
                         </p>
 
                         <p class="mt-5 text-[10px] font-bold uppercase text-brand">
-                            Habílidades
+                            Habilidades
                         </p>
                         <p class="mt-2 text-[10px] leading-relaxed">
                             Angular · TypeScript · HTML · CSS 
@@ -99,20 +125,28 @@
                 [class.border-brand]="selectedTemplate() === 'modern'"
                 [class.border-slate-200]="selectedTemplate() !== 'modern'"
                 class="min-w-0 rounded-2xl border-2 bg-white p-5
-                        text-left transition-colors hover:bg-blue-50/30"
+                        text-left shadow-sm transition hover:shadow-md"
             >
                 <div class="flex flex-wrap items-center justify-between gap-2">
                     <h2 class="text-xl font-bold">Moderna</h2>
 
                     @if (selectedTemplate() === 'modern') {
-                        <span class="rounded-full bg-brand px-3 py-1 text-xs text-white">
-                            ✓ Seleccionada
+                        <span class="inline-flex items-center gap-1 rounded-full
+                                     bg-brand px-3 py-1 text-xs font-semibold text-white"
+                        >
+                            <span
+                                class="material-symbols-outlined text-base"
+                                aria-hidden="true"
+                            >
+                                check_circle
+                            </span>
+                            Seleccionada
                         </span>
                     }
                 </div>
 
                 <p class="mt-2 text-sm leading-relaxed text-slate-500">
-                    Dos columnas, contacto laboral y espacio para tus proyectos.
+                    Dos columnas,  barra lateral de contacto y habilidades, y espacio para tus proyectos.
                 </p>
 
                 <div class="mt-6 rounded-xl bg-slate-100 p-4 sm:p-6">
@@ -132,7 +166,7 @@
                             <p class="mt-5 text-[9px] font-bold uppercase">Contacto</p>
                             <p class="mt-2 text-[9px]">Trujillo, Perú</p>
 
-                            <p class="mt-5 text-[9px] font-bold uppercase">Habílidades</p>
+                            <p class="mt-5 text-[9px] font-bold uppercase">Habilidades</p>
                             <p class="mt-2 text-[9px] leading-loose">
                                 Angular <br>
                                 TypeScript <br>
@@ -183,10 +217,13 @@
             <a 
                 routerLink="/editor"
                 [queryParams]="{ plantilla: selectedTemplate() }"
-                class="inline-flex min-h-12 items-center justify-center rounded-lg
-                        bg-brand px-6 py-3 font-semibold text-white"
+                class="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg
+                        bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark"
             >
-                Usar plantilla →
+                Usar plantilla
+                <span class="material-symbols-outlined" aria-hidden="true">
+                    arrow_forward
+                </span>
             </a>
         </div>
     </main>
