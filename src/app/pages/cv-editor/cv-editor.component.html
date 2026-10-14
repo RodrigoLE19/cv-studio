@@ -305,7 +305,7 @@
                         >
                             <span
                                 class="material-symbols-outlined rounded-lg
-                                        bg-indigo-50 p-2 text-slate-600"
+                                        bg-blue-50 p-2 text-brand"
                                 aria-hidden="true"
                             >
                                 badge
@@ -556,83 +556,160 @@
                         </div>
                     </details>
 
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Educación</h2>
-
-                            <button
-                                type="button"
-                                (click)="addEducation()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
                             >
-                                + Añadir
-                            </button>
-                        </div>
+                                school
+                            </span>
 
-                        @for(item of cv.education; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Formación {{ i + 1 }}
-                                </legend>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Educación
+                                </span>
 
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-semibold">
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.education.length }}
+                                    {{ cv.education.length === 1 ? 'formación añadida' : 'formaciones añadidas' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-180"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-100 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">
+                                    Añade tus estudios y formación académica.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    (click)="addEducation()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg
+                                        bg-blue-50 px-3 py-2 text-sm font-semibold
+                                        text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                        add
+                                    </span>
+                                        Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.education; track item.id; let i = $index) {
+                            <details
+                                open
+                                class="group/record rounded-lg border border-slate-200"
+                            >
+                                <summary
+                                    class="flex cursor-pointer list-none items-center gap-3
+                                            p-4 [&::-webkit-details-marker]:hidden"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-slate-400"
+                                        aria-hidden="true"
+                                    >
+                                        school
+                                    </span>
+
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block truncate text-sm font-semibold">
+                                            {{ item.degree || 'Formación ' + (i + 1) }}
+                                        </span>
+
+                                        <span class="mt-1 block truncate text-xs text-slate-500">
+                                            {{ item.institution || 'Completa la institución' }}
+                                        </span>
+                                    </span>
+
+                                    <span
+                                        class="material-symbols-outlined text-slate-500
+                                            transition-transform group-open/record:rotate-180"
+                                        aria-hidden="true"
+                                    >
+                                        expand_more
+                                    </span>
+                                </summary>
+
+                                <div class="space-y-4 border-t border-slate-100 p-4">
+                                    <label class="block text-sm font-semibold text-slate-700">
                                         Carrera, grado o título
                                         <input
-                                            [(ngModel)]="item.degree"
-                                            [name]="'dregree-' + item.id"
-                                            placeholder="Ej. Ingeniería de Sistemas"
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                        [(ngModel)]="item.degree"
+                                        [name]="'degree-' + item.id"
+                                        placeholder="Ej. Ingeniería de Sistemas"
+                                        class="mt-2 w-full rounded-lg border border-slate-200
+                                                bg-slate-50 px-3 py-3 font-normal
+                                                focus:border-brand focus:outline-2
+                                                focus:outline-blue-200"
                                         >
                                     </label>
 
-                                    <label class="block text-sm font-semibold">
+                                    <label class="block text-sm font-semibold text-slate-700">
                                         Institución
                                         <input
-                                            [(ngModel)]="item.institution"
-                                            [name]="'institution-' + item.id"
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                        [(ngModel)]="item.institution"
+                                        [name]="'institution-' + item.id"
+                                        class="mt-2 w-full rounded-lg border border-slate-200
+                                                bg-slate-50 px-3 py-3 font-normal
+                                                focus:border-brand focus:outline-2
+                                                focus:outline-blue-200"
                                         >
                                     </label>
 
                                     <div class="grid gap-4 sm:grid-cols-2">
-                                        <label class="block min-w-0 text-sm font-semibold">
+                                        <label class="block min-w-0 text-sm font-semibold text-slate-700">
                                             Fecha de inicio
-                                            <input
-                                                type="month"
-                                                [(ngModel)]="item.startDate"
-                                                [name]="'education-start-' + item.id"
-                                                [max]="!item.ongoing && item.endDate ? item.endDate : null"
-                                                class="mt-2 w-full min-w-0 rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                        <input
+                                            type="month"
+                                            [(ngModel)]="item.startDate"
+                                            [name]="'education-start-' + item.id"
+                                            [max]="!item.ongoing && item.endDate ? item.endDate : null"
+                                            class="mt-2 w-full min-w-0 rounded-lg border
+                                                border-slate-200 bg-slate-50 px-3 py-3 font-normal"
                                         >
                                         </label>
 
-                                        <label class="block min-w-0 text-sm font-semibold">
+                                        <label class="block min-w-0 text-sm font-semibold text-slate-700">
                                             Fecha de fin
-                                            <input
-                                                type="month"
-                                                [(ngModel)]="item.endDate"
-                                                [name]="'education-end-' + item.id"
-                                                [disabled]="item.ongoing"
-                                                [min]="item.startDate || null"
-                                                class="mt-2 w-full min-w-0 rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal disabled:bg-slate-100"
-                                            >
+                                        <input
+                                            type="month"
+                                            [(ngModel)]="item.endDate"
+                                            [name]="'education-end-' + item.id"
+                                            [disabled]="item.ongoing"
+                                            [min]="item.startDate || null"
+                                            class="mt-2 w-full min-w-0 rounded-lg border
+                                                border-slate-200 bg-slate-50 px-3 py-3
+                                                font-normal disabled:bg-slate-100
+                                                disabled:text-slate-400"
+                                        >
                                         </label>
                                     </div>
 
-                                    <label class="flex items-center gap-3 text-sm">
-                                        <input 
+                                    <label class="flex min-h-11 items-center gap-3 text-sm text-slate-700">
+                                        <input
                                             type="checkbox"
                                             [(ngModel)]="item.ongoing"
                                             [name]="'education-ongoing-' + item.id"
                                             class="size-4 accent-brand"
                                         >
-                                        Actualmente estoy estudiando
+                                            Actualmente estoy estudiando
                                     </label>
 
                                     @if (
@@ -646,383 +723,724 @@
                                         </p>
                                     }
 
-                                    <label class="block text-sm font-semibold">
+                                    <label class="block text-sm font-semibold text-slate-700">
                                         Información adicional
                                         <textarea
                                             [(ngModel)]="item.description"
                                             [name]="'education-description-' + item.id"
                                             rows="3"
                                             placeholder="Ej. Estado de los estudios, especialidad o logros."
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                            class="mt-2 w-full resize-y rounded-lg border
+                                                    border-slate-200 bg-slate-50 px-3 py-3
+                                                    font-normal focus:border-brand
+                                                    focus:outline-2 focus:outline-blue-200"
                                         ></textarea>
                                     </label>
 
-                                    <button
-                                        type="button"
-                                        (click)="removeEducation(item.id)"
-                                        [attr.aria-label]="'Eliminar formación' + (i +1)"
-                                        class="rounded-lg px-3 py-2 text-sm
-                                                font-medium text-red-600 hover:bg-red-50"
-                                    >
-                                        Eliminar formación
-                                    </button>
+                                    <div class="flex justify-end border-t border-slate-100 pt-3">
+                                        <button
+                                            type="button"
+                                            (click)="removeEducation(item.id)"
+                                            [attr.aria-label]="'Eliminar formación ' + (i + 1)"
+                                            class="inline-flex min-h-10 items-center gap-2
+                                                    rounded-lg px-3 py-2 text-sm
+                                                    text-red-600 hover:bg-red-50"
+                                        >
+                                        <span class="material-symbols-outlined" aria-hidden="true">
+                                            delete
+                                        </span>
+                                            Eliminar
+                                        </button>
+                                    </div>
                                 </div>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavia no has añadido estudios. 
-                            </p>
-                        }
-
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Habilidades</h2>
-
-                            <button
-                                type="button"
-                                (click)="addSkill()"
-                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
-                                        font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
+                            </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Todavía no has añadido estudios.
+                                </p>
+                            }
                         </div>
+                    </details>
 
-                        @for (item of cv.skills; track item.id; let i = $index) {
-                            <div class="mt-4">
-                                <label
-                                    [for]="'skill-' + item.id"
-                                    class="mb-2 block text-sm font-semibold">
-                                    Habilidad {{ i + 1 }}
-                                </label>
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                psychology
+                            </span>
 
-                                <div class="flex items-center gap-2">
-                                    <input
-                                        [id]="'skill-' + item.id"
-                                        [name]="'skill-' + item.id"
-                                        [(ngModel)]="item.name"
-                                        placeholder="Ej. Excel, trabajo en equipo o Angular"
-                                        class="min-w-0 flex-1 rounded-lg border
-                                                border-slate-300 px-3 py-3"
-                                    >
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Habilidades
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.skills.length }}
+                                    {{ cv.skills.length === 1 ? 'habilidad añadida' : 'habilidades añadidas' }}
+                                </span>
+                            </span>
 
-                                    <button
-                                        type="button"
-                                        (click)="removeSkill(item.id)"
-                                        [attr.aria-label]="'Eliminar habilidad' + (i + 1)"
-                                        class="min-h-11 rounded-lg px-3 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Incluye competencias técnicas y personales.</p>
+
+                                <button
+                                    type="button"
+                                    (click)="addSkill()"
+                                    class="inline-flex min-h-0 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm
+                                            font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
+                                </button>
                             </div>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Añade tus competencia técnicas y personales. 
-                            </p>
-                        }
-                    </section>
 
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Idiomas</h2>
-
-                            <button
-                                type="button"
-                                (click)="addLanguage()"
-                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
-                                        font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
-                        </div>
-
-                        @for (item of cv.languages; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Idioma {{ i + 1 }}
-                                </legend>
-
-                                <label class="block text-sm font-semibold">
-                                    Idioma
-                                    <input
-                                        [(ngModel)]="item.name"
-                                        [name]="'language-name-' + item.id"
-                                        placeholder="Ej. Español o inglés"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
+                            @for (item of cv.skills; track item.id; let i = $index) {
+                                <div>
+                                    <label
+                                        [for]="'skill-' + item.id"
+                                        class="mb-2 block text-sm font-semibold"
                                     >
-                                </label>
+                                        Habilidad {{ i + 1 }}
+                                    </label>
 
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Nivel
-                                    <select
-                                        [(ngModel)]="item.level"
-                                        [name]="'language-level-' + item.id"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                        <option value="">Sin especificar</option>
-                                        <option value="Nativo">Nativo</option>
-                                        <option value="Básico">Básico</option>
-                                        <option value="Intermedio">Intermedio</option>
-                                        <option value="Avanzado">Avanzado</option>
-                                        <option value="A1">A1</option>
-                                        <option value="A2">A2</option>
-                                        <option value="B1">B1</option>
-                                        <option value="B2">B2</option>
-                                        <option value="C1">C1</option>
-                                        <option value="C2">C2</option>
-                                    </select>
-                                </label>
-
-                                <button
-                                    type="button"
-                                    (click)="removeLanguage(item.id)"
-                                    [attr.aria-label]="'Eliminar idioma' + (i + 1)"
-                                    class="mt-4 rounded-lg px-3 py-3 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                >
-                                    Eliminar idioma
-                                </button>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavía no has añadido idiomas.
-                            </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Cursos y certificaciones</h2>
-
-                            <button
-                                type="button"
-                                (click)="addCertification()"
-                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
-                                        font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
-                        </div>
-
-                        @for (item of cv.certifications; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Curso o certificación {{ i + 1 }}
-                                </legend>
-
-                                <label class="block text-sm font-semibold">
-                                    Nombre
-                                    <input
-                                        [(ngModel)]="item.name"
-                                        [name]="'certification-name-' + item.id"
-                                        placeholder="Ej. Excel intermedio"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
-
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Institución o entidad
-                                    <input
-                                        [(ngModel)]="item.issuer"
-                                        [name]="'certification-issuer-' + item.id"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
-
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Fecha de obtención
-                                    <input
-                                        type="month"
-                                        [(ngModel)]="item.date"
-                                        [name]="'certification-date-' + item.id"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
-
-                                <button
-                                    type="button"
-                                    (click)="removeCertification(item.id)"
-                                    [attr.aria-label]="'Eliminar curso o certificación' + (i + 1)"
-                                    class="mt-4 rounded-lg px-3 py-3 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                >
-                                    Eliminar registro
-                                </button>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavía no has añadido cursos o certificaciones.
-                            </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">
-                                Proyectos
-                            </h2>
-
-                            <button
-                                type="button"
-                                (click)="addProject()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
-                        </div>
-
-                        @for (item of cv.projects; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Proyecto {{ i + 1 }}
-                                </legend>
-
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-semibold">
-                                        Nombre del proyecto
+                                    <div class="flex items-center gap-2">
                                         <input
+                                            [id]="'skill-' + item.id"
+                                            [name]="'skill-' + item.id"
                                             [(ngModel)]="item.name"
-                                            [name]="'project-name-' + item.id"
-                                            placeholder="Ej. Finora"
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
+                                            placeholder="Ej. Excel, trabajo en equipo o Angular"
+                                            class="min-w-0 flex-1 rounded-lg border
+                                                    border-slate-300 px-3 py-3"
                                         >
-                                    </label>
 
-                                    <label class="block text-sm font-semibold">
-                                        Descripción y aportes
-                                        <textarea
-                                            [(ngModel)]="item.description"
-                                            [name]="'project-description-' + item.id"
-                                            rows="4"
-                                            placeholder="Describie el proyecyo y que realizaste."
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
-                                        ></textarea>
-                                    </label>
-
-                                    <label class="block text-sm font-semibold">
-                                        Tecnologías o herramientas - opcional
-                                        <input
-                                            [(ngModel)]="item.technologies"
-                                            [name]="'project-technologies-' + item.id"
-                                            placeholder="Ej. Angular, TypeScript y Tailwind CSS"
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
+                                        <button
+                                            type="button"
+                                            (click)="removeSkill(item.id)"
+                                            [attr.aria-label]="'Eliminar habilidad' + (i + 1)"
+                                            class="min-h-11 rounded-lg px-3 text-sm
+                                                    text-red-600 hover:bg-red-50"
                                         >
-                                    </label>
-
-                                    <label class="block text-sm font-semibold">
-                                        Enlace - opcional
-                                        <input
-                                            type="url"
-                                            [(ngModel)]="item.url"
-                                            [name]="'project-url-' + item.id"
-                                            placeholder="https://..."
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
-                                        >
-                                    </label>
-
-                                    @if (item.url.trim() && !safeUrl(item.url)) {
-                                        <p role="alert" class="text-sm text-red-600">
-                                            Introduce un enlace completo que empiece con https:// o http://.
-                                        </p>
-                                    }
-
-                                    <button
-                                        type="button"
-                                        (click)="removeProject(item.id)"
-                                        [attr.aria-label]="'Eliminar proyecto' + (i + 1)"
-                                        class="rounded-lg px-3 py-2 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                    >
-                                        Eliminar proyecto
-                                    </button>
+                                            <span class="material-symbols-outlined" aria-hidden="true">
+                                                delete
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Puedes añadir proyectos personlaes, académicos o profesionales.
-                            </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Enlaces profesiones</h2>
-                            <button
-                                type="button"
-                                (click)="addLink()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Añade tus competencia técnicas y personales. 
+                                </p>
+                            }
                         </div>
+                    </details>
 
-                        @for (item of cv.links; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Enlace {{ i + 1 }}
-                                </legend>
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                translate
+                            </span>
 
-                                <label class="block text-sm font-semibold">
-                                    Nombre del enlace
-                                    <input
-                                        [(ngModel)]="item.label"
-                                        [name]="'link-label-' + item.id"
-                                        placeholder="Ej. LinkedIn, portafolio o GitHub"
-                                        class="mt-2 w-full rounded-lg border
-                                                 border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Idiomas 
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.languages.length }}
+                                    {{ cv.languages.length === 1 ? 'idioma añadido' : 'idiomas añadidos' }}
+                                </span>
+                            </span>
 
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Dirección 
-                                    <input
-                                        type="url"
-                                        [(ngModel)]="item.url"
-                                        [name]="'link-url-' + item.id"
-                                        placeholder="https://..."
-                                        class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
 
-                                @if (item.url.trim() && !safeUrl(item.url)) {
-                                    <p role="alert" class="mt-2 text-sm text-red-600">
-                                        Introduce un enlace completo que empiece con https:// o http://. 
-                                    </p>
-                                }
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Indica los idiomas que dominas y tu nivel.</p>
 
                                 <button
                                     type="button"
-                                        (click)="removeLink(item.id)"
-                                        [attr.aria-label]="'Eliminar enlace' + (i + 1)"
-                                        class="mt-4 rounded-lg px-3 py-2 text-sm
-                                                text-red-600 hover:bg-red-50"
+                                    (click)="addLanguage()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm
+                                            font-semibold text-brand hover:bg-blue-100"
                                 >
-                                    Eliminar enlace 
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
                                 </button>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Añade los enlaces que quieras incluir en tu CV.
-                            </p>
-                        }
-                    </section>
+                            </div>
+
+                            @for (item of cv.languages; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span class="min-w-0 flex-1">
+                                            <span class="min-w-0 flex-1">
+                                                {{ item.name || 'Idioma' + (i + 1) }}
+                                            </span>
+                                            <span class="mt-1 block text-xs text-slate-500">
+                                                {{ item.level || 'Nivel sin especificar' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <div class="grid gap-4 sm:grid-cols-2">
+                                            <label class="block text-sm font-semibold text-slate-700">
+                                                Idioma
+                                                <input
+                                                    [(ngModel)]="item.name"
+                                                    [name]="'language-name-' + item.id"
+                                                    placeholder="Ej. Español o inglés"
+                                                    class="mt-2 w-full rounded-lg border
+                                                            border-slate-300 px-3 py-3 font-normal
+                                                            focus:border-brand focus:outline-2
+                                                            focus:outline-blue-200"
+                                                >
+                                            </label>
+
+                                            <label class="block text-sm font-semibold text-slate-700">
+                                                Nivel
+                                                <select
+                                                    [(ngModel)]="item.level"
+                                                    [name]="'language-level-' + item.id"
+                                                    class="mt-2 w-full rounded-lg border
+                                                            border-slate-300 px-3 py-3 font-normal"
+                                                >
+                                                    <option value="">Sin especificar</option>
+                                                    <option value="Nativo">Nativo</option>
+                                                    <option value="Básico">Básico</option>
+                                                    <option value="Intermedio">Intermedio</option>
+                                                    <option value="Avanzado">Avanzado</option>
+                                                    <option value="A1">A1</option>
+                                                    <option value="A2">A2</option>
+                                                    <option value="B1">B1</option>
+                                                    <option value="B2">B2</option>
+                                                    <option value="C1">C1</option>
+                                                    <option value="C2">C2</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                (click)="removeLanguage(item.id)"
+                                                [attr.aria-label]="'Eliminar idioma' + (i + 1)"
+                                                class="inline-flex min-h-10 items-center gap-2
+                                                         rounded-lg px-3 py-2 text-sm
+                                                            text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">
+                                                    delete
+                                                </span>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 text-sm text-slate-500">
+                                    Todavía no has añadido idiomas.
+                                </p>
+                            }
+                        </div>
+                    </details>
+
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                verified
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Cursos y certficaciones  
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.certifications.length }}
+                                    {{ cv.certifications.length === 1 ? 'registro añadido' : 'registros añadidos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Añade cursos y certificaiones relavantes para tu perfil.</p>
+
+                                <button
+                                    type="button"
+                                    (click)="addCertification()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm
+                                            font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                        add
+                                    </span>
+                                    Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.certifications; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-slate-400"
+                                            aria-hidden="true"
+                                        >
+                                            verified
+                                        </span>
+
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-sm font-semibold">
+                                                {{ item.name || 'Curso o certificación' + (i + 1) }}
+                                            </span>
+
+                                            <span class="mt-1 block truncate text-xs text-slate-500">
+                                                {{ item.issuer || 'Completa la institución o entidad' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <label class="block text-sm font-semibold">
+                                            Nombre del curso o certicación
+                                            <input
+                                                [(ngModel)]="item.name"
+                                                [name]="'certification-name-' + item.id"
+                                                placeholder="Ej. Excel intermedio"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-20"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Institución o entidad
+                                            <input
+                                                [(ngModel)]="item.issuer"
+                                                [name]="'certification-issuer-' + item.id"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-20"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Fecha de obtención
+                                            <input
+                                                type="month"
+                                                [(ngModel)]="item.date"
+                                                [name]="'certification-date-' + item.id"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal"
+                                            >
+                                        </label>
+
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                (click)="removeCertification(item.id)"
+                                                [attr.aria-label]="'Eliminar curso o certificación' + (i + 1)"
+                                                class="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-3 text-sm
+                                                            text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">
+                                                    delete
+                                                </span>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Todavía no has añadido cursos o certificaciones.
+                                </p>
+                            }
+                        </div>
+                    </details>
+                    
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                folder_open
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Proyectos 
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.projects.length }} 
+                                    {{ cv.projects.length === 1 ? 'proyecto añadido' : 'proyectos añadidos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">
+                                    Incluye proyectos personales, académicos o prefesionales.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    (click)="addProject()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2
+                                            text-sm font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.projects; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-slate-400"
+                                            aria-hidden="true"
+                                        >
+                                            folder
+                                        </span>
+
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-sm font-semibold">
+                                                {{ item.name || 'Proyecto' + (i + 1) }}
+                                            </span>
+                                            <span class="mt-1 block truncate text-xs text-slate-500">
+                                                {{ item.technologies || 'Describe el proyecto y tus aportes' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Nombre del proyecto
+                                            <input
+                                                [(ngModel)]="item.name"
+                                                [name]="'project-name-' + item.id"
+                                                placeholder="Ej. Finora"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Descripción y aportes
+                                            <textarea
+                                                [(ngModel)]="item.description"
+                                                [name]="'project-description-' + item.id"
+                                                rows="4"
+                                                placeholder="Describie el proyecyo y que realizaste."
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            ></textarea>
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Tecnologías o herramientas - opcional
+                                            <input
+                                                [(ngModel)]="item.technologies"
+                                                [name]="'project-technologies-' + item.id"
+                                                placeholder="Ej. Angular, TypeScript y Tailwind CSS"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Enlace - opcional
+                                            <input
+                                                type="url"
+                                                [(ngModel)]="item.url"
+                                                [name]="'project-url-' + item.id"
+                                                placeholder="https://..."
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        @if (item.url.trim() && !safeUrl(item.url)) {
+                                            <p role="alert" class="text-sm text-red-600">
+                                                Introduce un enlace completo que empiece con https:// o http://.
+                                            </p>
+                                        }
+
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                (click)="removeProject(item.id)"
+                                                [attr.aria-label]="'Eliminar proyecto' + (i + 1)"
+                                                class="inline-flex min-h-10 items-center gap-1 rounded-lg px-3 py-2 text-sm
+                                                        text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Puedes añadir proyectos personlaes, académicos o profesionales.
+                                </p>
+                            }
+                        </div>
+                    </details>
+
+                
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                link
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Enlaces profesionales 
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.links.length }}
+                                    {{ cv.links.length === 1 ? 'enlace añadido' : 'enlaces añadidos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Añade LinkedIn, tu portafolio u otros enlaces.</p>
+                                <button
+                                    type="button"
+                                    (click)="addLink()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-4 py-3
+                                            text-sm font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.links; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-sm font-semibold">
+                                                {{ item.label || 'Enlace' + (i + 1) }}
+                                            </span>
+
+                                            <span class="mt-1 block truncate text-xs text-slate-500">
+                                                {{ item.url || 'Añade la dirección del enlace' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Nombre del enlace
+                                            <input
+                                                [(ngModel)]="item.label"
+                                                [name]="'link-label-' + item.id"
+                                                placeholder="Ej. LinkedIn, portafolio o GitHub"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        <label class="mt-4 block text-sm font-semibold text-slate-700">
+                                            Dirección 
+                                            <input
+                                                type="url"
+                                                [(ngModel)]="item.url"
+                                                [name]="'link-url-' + item.id"
+                                                placeholder="https://..."
+                                                class="mt-2 w-full rounded-lg border
+                                                            border-slate-300 px-3 py-3 font-normal
+                                                            focus:border-brand focus:outline-2
+                                                            focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        @if (item.url.trim() && !safeUrl(item.url)) {
+                                            <p role="alert" class="mt-2 text-sm text-red-600">
+                                                Introduce un enlace completo que empiece con https:// o http://. 
+                                            </p>
+                                        }
+
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                    (click)="removeLink(item.id)"
+                                                    [attr.aria-label]="'Eliminar enlace' + (i + 1)"
+                                                    class="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm
+                                                            text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                                Eliminar 
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Añade los enlaces que quieras incluir en tu CV.
+                                </p>
+                            }
+                        </div>
+                    </details>
                     </div>
                 </form>
             </section>
