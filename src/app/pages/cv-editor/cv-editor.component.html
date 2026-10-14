@@ -1,59 +1,175 @@
 <div class="cv-editor-page min-h-dvh bg-canvas">
     <header
-        class="editor-header flex flex-wrap items-center justify-between gap-4
-                border-b border-slate-200 bg-white px-5 py-5 sm:px-10"
+        class="editor-header border-b border-slate-200 bg-white"
     >
-        <a routerLink="/" class="text-xl font-bold text-brand">
-            CV Studio 
-        </a>
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center
+                    justify-between gap-4 px-5 py-4 sm:px-10"
+        >
 
-        <div class="flex flex-wrap items-center gap-3">
-            <a
-                routerLink="/"
-                class="rounded-lg px-4 py-3 text-sm font-semibold text-slate-600"
-            >
-                ← Mis CV
+            <a routerLink="/" class="flex items-center gap-3">
+                <span
+                    class="material-symbols-outlined rounded-lg
+                         bg-brand p-2 text-white"
+                    aria-hidden="true"
+                >
+                    description
+                </span>
+
+                <span class="text-lg font-bold text-slate-900">
+                    CV Studio
+                </span>
             </a>
 
-            <button
-                type="button"
-                (click)="changeTemplate()"
-                class="rounded-lg bg-blue-50 px-4 py-3
-                        text-sm font-semibold text-brand"
+            <nav
+                aria-label="Navegación principal"
+                class="flex items-center gap-2 text-sm"
             >
-                Cambiar a {{ template === 'classic' ? 'Moderna' : 'Clásica' }}
-            </button>
+                <a
+                    routerLink="/"
+                    class="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50"
+                >
+                    Mis CV
+                </a>
 
-            <button
-                type="button"
-                (click)="exportPdf()"
-                class="rounded-lg bg-brand px-5 py-3
-                        text-sm font-semibold text-white hover:bg-brand-dark"
-            >
-                Exportar PDF
-            </button>
-
+                <span
+                    aria-current="page"
+                    class="rounded-lg bg-indigo-100 px-3 py-2
+                            font-semibold text-slate-800"
+                >
+                    Editor
+                </span>
+            </nav>
         </div>
-        
     </header>
 
     <main class="editor-main mx-auto max-w-7xl px-5 py-8 sm:px-10">
-        <div class="editor-heading mb-6">
-            <h1 class="text-2xl font-bold">Editor de currículum</h1>
-            <p
-                role="status"
-                class="mt-2 text-sm text-slate-600">
-                {{ saveStatus }}
-            </p>
-            <p class="mt-2 text-sm text-slate-500">
-                Completa tus datos y observa los cambios en la vista previa.
-            </p>
+        <div class="editor-heading mb-6 rounded-xl border
+                    border-slate-200 bg-white p-4"
+        >
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="min-w-0">
+                    <a
+                        routerLink="/"
+                        class="mb-2 inline-flex items-center gap-1
+                                text-xs text-slate-500 hover:text-brand"
+                    >
+                        <span class="material-symbols-outlined" aria-hidden="true">
+                            arrow_back
+                        </span>
+                        volver a Mis CV
+                    </a>
+
+                    <h1 class="wrap-break-word text-lg font-semibold text-slate-900">
+                        {{ document?.name || 'Editor de currículum' }}
+                    </h1>
+
+                    <p
+                        role="status"
+                        class="mt-2 flex items-center gap-2 text-xs text-slate-600"
+                    >
+                        <span class="material-symbols-outlined" aria-hidden="true">
+                            save
+                        </span>
+                        {{ saveStatus }}
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    (click)="exportPdf()"
+                    class="inline-flex min-h-11 items-center justify-center
+                            gap-2 rounded-lg bg-brand px-4 py-3
+                            text-sm font-semibold text-white hover:bg-brand-dark"
+                >
+                    <span class="material-symbols-outlined" aria-hidden="true">
+                        download
+                    </span>
+                    Exportar PDF
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="mobile-view-switch mb-5 grid grid-cols-2 gap-2
+                    rounded-xl border border-slate-200 bg-white p-2 lg:hidden"
+            role="group"
+            aria-label="Vista del editor"
+        >
+            <button
+                type="button"
+                (click)="mobileView = 'edit'"
+                [attr.aria-pressed]="mobileView === 'edit'"
+                [class.bg-brand]="mobileView === 'edit'"
+                [class.text-white]="mobileView === 'edit'"
+                class="flex min-h-11 items-center justify-center gap-2
+                        rounded-lg px-3 py-2 text-sm font-semibold"
+            >
+                <span class="material-symbols-outlined" aria-hidden="true">
+                    edit
+                </span>
+                Editar
+            </button>
+
+            <button
+                type="button"
+                (click)="mobileView = 'preview'"
+                [attr.aria-pressed]="mobileView === 'preview'"
+                [class.bg-brand]="mobileView === 'preview'"
+                [class.text-white]="mobileView === 'preview'"
+                class="flex min-h-11 items-center justify-center gap-2
+                        rounded-lg px-3 py-2 text-sm font-semibold"
+            >
+                <span class="material-symbols-outlined" aria-hidden="true">
+                    visibility
+                </span>
+                Vista previa
+            </button>
         </div>
 
         <div class="editor-layout grid items-start gap-8 lg:grid-cols-[1fr_1.3fr]">
-            <section class="editor-form rounded-xl border border-slate-200 bg-white p-6">
+            <section 
+                class="editor-form min-w-0"
+                [class.mobile-panel-hidden]="mobileView !== 'edit'"
+            >
+                <div
+                    class="mb-5 grid grid-cols-2 gap-2 rounded-xl bg-white p-2"
+                    role="tablist"
+                    aria-label="Opciones del editor"
+                >
+                    <button
+                        id="content-tab"
+                        type="button"
+                        role="tab"
+                        aria-controls="content-panel"
+                        [attr.aria-selected]="activeTab === 'content'"
+                        (click)="activeTab = 'content'"
+                        class="flex min-h-12 items-center justify-center gap-2
+                                rounded-lg px-3 py-3 text-sm font-semibold text-slate-600
+                                aria-selected:bg-indigo-100 aria-selected:text-slate-900"
+                    >
+                        <span class="material-symbols-outlined" aria-hidden="true">
+                            edit_note
+                        </span>
+                        Contenido
+                    </button>
 
-                
+                    <button
+                        id="design-tab"
+                        type="button"
+                        role="tab"
+                        aria-controls="design-panel"
+                        [attr.aria-selected]="activeTab === 'design'"
+                        (click)="activeTab = 'design'"
+                        class="flex min-h-12 items-center justify-center gap-2
+                                rounded-lg px-3 py-3 text-sm font-semibold text-slate-600
+                                aria-selected:bg-indigo-100 aria-selected:text-slate-900"
+                    >
+                        <span class="material-symbols-outlined" aria-hidden="true">
+                            palette 
+                        </span>
+                        Diseño y formato
+                    </button>
+                </div>
 
                 <form 
                     class="space-y-5"
@@ -61,360 +177,821 @@
                     (change)="scheduleSave()"
                 >
 
-                    <section class="border-b border-slate-200 pb-6">
-                        <h2 class="mb-4 text-lg font-bold">Diseño del CV</h2>
+                    <div
+                        id="design-panel"
+                        role="tabpanel"
+                        aria-labelledby="design-tab"
+                        [hidden]="activeTab !== 'design'"
+                        class="space-y-4"
+                    >
 
-                        <div class="grid gap-4 sm:grid-cols-2">
-                            <label class="block text-sm font-semibold">
-                                Color principal
-                                <select 
-                                    name="design-color"
-                                    [(ngModel)]="design.color"
-                                    class="mt-2 w-full rounded-lg border border-slate-300
-                                            bg-white px-3 py-3 font-normal"
+                        <section class="rounded-xl border border-slate-200 bg-white p-5">
+                            <div class="flex items-center gap-2">
+                                <span
+                                    class="material-symbols-outlined text-brand"
+                                    aria-hidden="true"
                                 >
-                                    <option value="blue">Azul</option>
-                                    <option value="teal">Verde petróleo</option>
-                                    <option value="purple">Morado</option>
-                                    <option value="slate">Gris Oscuro</option>
-                                </select>
-                            </label>
+                                    dashboard
+                                </span>
 
-                            <label class="block text-sm font-semibold">
-                                Tipografía
-                                <select 
-                                    name="design.font"
-                                    [(ngModel)]="design.font"
-                                    class="mt-2 w-full rounded-lg border border-slate-300
-                                            bg-white px-3 py-3 font-normal"
+                                <h2 class="text-base font-semibold text-slate-900">
+                                    Plantilla del currículum
+                                </h2>
+                            </div>
+
+                            <p class="mt-2 text-xs leading-relaxed text-slate-500">
+                                Cambia la estructura sin perder tu información.
+                            </p>
+
+                            <div class="mt-5 grid grid-cols-2 gap-3">
+                                
+                                <button
+                                    type="button"
+                                    (click)="selectTemplate('classic')"
+                                    [attr.aria-pressed]="template === 'classic'"
+                                    class="min-w-0 rounded-lg border-2 border-transparent
+                                            bg-slate-50 p-3 text-left
+                                            aria-pressed:border-brand aria-pressed:bg-blue-50"
                                 >
-                                    <option value="sans">Arial</option>
-                                    <option value="serif">Georgia</option>
-                                    <option value="mono">Courier New</option>
-                                </select>
-                            </label>
-                        </div>
-
-                        <fieldset class="mt-6">
-                            <legend class="text-sm font-semibold">Secciones visibles</legend>
-
-                                <div class="mt-3 grid gap-3 sm:grid-cols-2">
-                                    @for (section of sectionOptions; track section.key) {
-                                    <label class="flex min-h-11 items-center gap-3 text-sm">
-                                        <input
-                                        type="checkbox"
-                                        [checked]="isSectionVisible(section.key)"
-                                        (change)="toggleSection(section.key)"
-                                        class="size-4 accent-brand"
+                                    <div class="relative rounded-lg bg-indigo-50 p-3">
+                                        <div
+                                            aria-hidden="true"
+                                            class="mx-auto aspect-[210/160] w-full max-w-36
+                                                    space-y-2 bg-white p-3 shadow-sm"
                                         >
-                                        {{ section.label }}
-                                    </label>
+                                            <div class="mx-auto h-2 w-3/5 bg-slate-800"></div>
+                                            <div class="mx-auto h-1 w-2/5 bg-slate-300"></div>
+                                            <div class="h-1 w-full bg-slate-200"></div>
+                                            <div class="h-1.5 w-2/5 bg-brand"></div>
+                                            <div class="h-1 w-full bg-slate-200"></div>
+                                            <div class="h-1 w-4/5 bg-slate-200"></div>
+                                        </div>
+
+                                        @if (template === 'classic') {
+                                            <span
+                                                class="material-symbols-outlined absolute right-2 top-2
+                                                    rounded-full bg-brand p-1 text-white"
+                                                aria-hidden="true"
+                                            >
+                                                check
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <span class="mt-3 block text-sm font-semibold">Clásica</span>
+                                    <span class="mt-1 block text-xs text-slate-500">Una columna</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    (click)="selectTemplate('modern')"
+                                    [attr.aria-pressed]="template === 'modern'"
+                                    class="min-w-0 rounded-lg border-2 border-transparent
+                                            bg-slate-50 p-3 text-left
+                                            aria-pressed:border-brand aria-pressed:bg-blue-50"
+                                >
+                                    <div class="relative rounded-lg bg-indigo-50 p-3">
+                                        <div
+                                            aria-hidden="true"
+                                            class="mx-auto grid aspect-[210/160] w-full max-w-36
+                                                    grid-cols-[32%_68%] bg-white shadow-sm"
+                                        >
+                                            <div class="space-y-2 bg-blue-100 p-2">
+                                                <div class="mx-auto size-4 rounded-full bg-blue-300"></div>
+                                                <div class="h-1 w-full bg-slate-400"></div>
+                                                <div class="h-1 w-4/5 bg-slate-300"></div>
+                                            </div>
+
+                                            <div class="space-y-2 p-2">
+                                                <div class="h-2 w-4/5 bg-slate-800"></div>
+                                                <div class="h-1 w-3/5 bg-brand"></div>
+                                                <div class="h-1 w-full bg-slate-200"></div>
+                                                <div class="h-1 w-full bg-slate-200"></div>
+                                                <div class="h-1 w-4/5 bg-slate-200"></div>
+                                            </div>
+                                        </div>
+
+                                        @if (template === 'modern') {
+                                            <span
+                                                class="material-symbols-outlined absolute right-2 top-2
+                                                    rounded-full bg-brand p-1 text-white"
+                                                aria-hidden="true"
+                                            >
+                                                check
+                                            </span>
+                                        }
+                                    </div>
+
+                                    <span class="mt-3 block text-sm font-semibold">Moderna</span>
+                                    <span class="mt-1 block text-xs text-slate-500">Dos columnas</span>
+                                </button>
+                            </div>
+                        </section>
+
+
+                        <section class="rounde-xl border border-slate-200 bg-white p-5">
+                            <h2 class="mb-4 text-lg font-bold">Diseño del CV</h2>
+
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex flex-wrap items-center justify-between gap-2">
+                                        <span class="flex items-center gap-2 text-sm font-semibold">
+                                            <span
+                                                class="material-symbols-outlined text-brand">
+                                                palette
+                                            </span>
+                                            Color principal
+                                        </span>
+
+                                        <span class="text-xs font-medium text-brand">
+                                            {{ selectedColorLabel }}
+                                        </span>
+                                    </div>
+
+                                    <p class="mt-2 text-xs leading-relaxed text-slate-500">
+                                        Se aplica a títulos, enlaces y detalles del currículum.
+                                    </p>
+
+                                    <div
+                                        class="mt-4 flex flex-wrap gap-4 p-1"
+                                        role="group"
+                                        aria-label="Color principal del curriculum">
+                                        @for (option of colorOptions; track option.key) {
+                                            <button
+                                                type="button"
+                                                (click)="selectColor(option.key)"
+                                                [style.background-color]="palettes[option.key].accent"
+                                                [attr.aria-label]="option.label"
+                                                [attr.aria-pressed]="design.color === option.key"
+                                                class="grid size-10 place-items-center rounded-2xl
+                                                        text-white ring-offset-2 ring-offset-white
+                                                        aria-pressed:ring-2 aria-pressed:ring-brand"
+                                            >
+                                                @if (design.color === option.key) {
+                                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                                        check
+                                                    </span>
+                                                }
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="flex items-center gap-2">
+                                        <span
+                                            class="material-symbols-outlined text-brand">
+                                            text_fields
+                                        </span>
+
+                                        <h3 class="text-sm font-semibold">Tipografía del documento</h3>
+                                    </div>
+
+                                    <p class="mt-2 text-xs leading-relaxed text-slate-500">
+                                        Elige cómo se verá el texto de tu currículum.
+                                    </p>
+
+                                    <div
+                                        class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-3"
+                                        role="group"
+                                        aria-label="Tipografía del currículum">
+                                        @for (option of fontOptions; track option.key) {
+                                            <button
+                                                type="button"
+                                                (click)="selectFont(option.key)"
+                                                [attr.aria-pressed]="design.font === option.key"
+                                                class="flex min-w-0 flex-col items-center gap-2 rounded-lg
+                                                        border-w border-transparent bg-indigo-50 px-3 py-4
+                                                        text-center aria-pressed:border-brand
+                                                        aria-pressed:bg-blue-50"
+                                            >
+                                                <span
+                                                    [style.font-family]="fonts[option.key]"
+                                                    class="text-3xl text-slate-800"
+                                                    aria-hidden="true"
+                                                >
+                                                    Ag 
+                                                </span>
+
+                                                <span class="text-sm font-semibold text-slate-900">
+                                                    {{ option.label }}
+                                                </span>
+
+                                                <span class="text-xs text-slate-500">
+                                                    {{ option.description }}
+                                                </span>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+
+                            <fieldset class="mt-6 border-t border-slate-100 pt-4">
+                                <legend class="flex items-center gap-2 text-sm font-semibold">
+                                    <span
+                                        class="material-symbols-outlined text-brand"
+                                        aria-hidden="true"
+                                    >
+                                        view_list
+                                    </span>
+                                    Secciones visibles
+                                </legend>
+
+                                <p class="mt-2 text-xs leading-relaxed text-slate-500">
+                                    Active las secciones que quieres mostrar en tu CV.
+                                </p>
+
+                                <div class="mt-4 space-y-2">
+                                    @for (section of sectionOptions; track section.key) {
+                                        <label class="flex min-h-12 cursor-pointer items-center 
+                                                    justify-between gap-3 rounded-lg bg-indigo-50
+                                                    px-3 py-2"
+                                        >
+                                            <span class="text-sm font-medium text-slate-700">
+                                                {{ section.label }}
+                                            </span>
+
+                                            <span class="relative inline-flex shrink-0 items-center">
+                                                <input
+                                                    type="checkbox"
+                                                    role="switch"
+                                                    [checked]="isSectionVisible(section.key)"
+                                                    (change)="toggleSection(section.key)"
+                                                    class="peer sr-only"
+                                                >
+
+                                                <span
+                                                    aria-hidden="true"
+                                                    class="h-6 w-11 rounded-full bg-slate-300
+                                                            transition-colors peer-checked:bg-brand
+                                                            peer-focus-visible:outline-2
+                                                            peer-focus-visible:outline-offset-4
+                                                            peer-focus-visible:outline-brand"
+                                                ></span>
+
+                                                <span
+                                                    aria-hidden="true"
+                                                    class="pointer-events-none absolute left-1 top-1
+                                                            size-4 rounded-full bg-white shadow-sm
+                                                            transition-transform peer-checked:translate-x-5"
+                                                ></span>
+                                            </span>   
+                                        </label>
                                     }
                                 </div>
 
-                                <p class="mt-2 text-xs leading-relaxed text-slate-500">
-                                    Ocultar una sección conserva sus datos. Las secciones vacías
-                                    no aparecen en el currículum.
-                                </p>
+                                    <p class="mt-3 text-xs leading-relaxed text-slate-500">
+                                        Ocultar una sección conserva sus datos. Las secciones vacías
+                                        no aparecen en el currículum.
+                                    </p>
                             </fieldset>
 
-                    </section>
+                        </section>
 
-                    <h2 class="mb-5 text-lg font-bold">Dastos personales</h2>
+                    </div>
 
-                    <div>
-                        <label for="name" class="mb-2 block text-sm font-semibold">
-                            Nombre Completo
-                        </label>
-                        <input
-                            id="name"
-                            name="name"
-                            [(ngModel)]="cv.name"
-                            autocomplete="name"
-                            placeholder="Tu nombre completo"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-3
-                                    focus:border-brand focus:outline-2
-                                    focus:outline-blue-200"
+                    <div
+                        id="content-panel"
+                        role="tabpanel"
+                        aria-labelledby="content-tab"
+                        [hidden]="activeTab !== 'content'"
+                        class="space-y-4"
+                    >
+
+                    <details
+                        open
+                        class="group rounded-xl border border-slate-200 bg-white
+                                open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
                         >
-                    </div>
-
-                    <div>
-                        <label for="title" class="mb-2 block text-sm font-semibold">
-                            Título profesional
-                        </label>
-                        <input
-                            id="title"
-                            name="title"
-                            [(ngModel)]="cv.title"
-                            placeholder="Ej. Desarrollador Frontend"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-3
-                                    focus:border-brand focus:outline-2
-                                    focus:outline-blue-200"
-                        >
-                    </div>
-
-                    <div>
-                        <label for="email" class="mb-2 block text-sm font-semibold">
-                            Correo electrónico
-                        </label>
-                        <input
-                            id="email"
-                            name="email"
-                            type="email"
-                            [(ngModel)]="cv.email"
-                            autocomplete="email"
-                            placeholder="correo@ejemplo.com"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-3
-                                    focus:border-brand focus:outline-2
-                                    focus:outline-blue-200"
-                        >
-                    </div>
-
-                    <div>
-                        <label for="phone" class="mb-2 block text-sm font-semibold">
-                            Teléfono
-                        </label>
-                        <input
-                            id="phone"
-                            name="phone"
-                            type="tel"
-                            [(ngModel)]="cv.phone"
-                            autocomplete="tel"
-                            placeholder="Tu número de contacto"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-3
-                                    focus:border-brand focus:outline-2
-                                    focus:outline-blue-200"
-                        >
-                    </div>
-
-                    <div>
-                        <label for="city" class="mb-2 block text-sm font-semibold">
-                            Ciudad y país
-                        </label>
-                        <input
-                            id="city"
-                            name="city"
-                            [(ngModel)]="cv.city"
-                            placeholder="Ej. Trujillo, Perú"
-                            class="w-full rounded-lg border border-slate-300 px-3 py-3
-                                    focus:border-brand focus:outline-2
-                                    focus:outline-blue-200"
-                        >
-                    </div>
-
-                    <div>
-                        <label for="profile" class="mb-2 block text-sm font-semibold">
-                            Perfil profesional
-                        </label>
-                        <textarea
-                            id="profile"
-                            name="profile"
-                            [(ngModel)]="cv.profile"
-                            rows="5"
-                            placeholder="Describe tu experiencia, habílidades y objetivos."
-                            class="w-full resize-y rounded-lg border border-slate-300 px-3 py-3
-                                    focus:border-brand focus:outline-2
-                                    focus:outline-blue-200"
-                        ></textarea>
-                    </div>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Experiencia laboral</h2>
-
-                            <button
-                                type="button"
-                                (click)="addExperience()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-blue-50 p-2 text-brand"
+                                aria-hidden="true"
                             >
-                                + Añadir
-                            </button>
+                                person
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Datos personales 
+                                </span>
+
+                                <span class="mt-1 block truncate text-xs text-slate-500">
+                                    {{ cv.name || 'Nombre, título profesional y contacto' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-100 p-5">
+                            <div>
+                                <label for="name" class="mb-2 block text-sm font-semibold">
+                                    Nombre Completo
+                                </label>
+                                <input
+                                    id="name"
+                                    name="name"
+                                    [(ngModel)]="cv.name"
+                                    autocomplete="name"
+                                    placeholder="Tu nombre completo"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                            focus:border-brand focus:outline-2
+                                            focus:outline-blue-200"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="title" class="mb-2 block text-sm font-semibold">
+                                    Título profesional
+                                </label>
+                                <input
+                                    id="title"
+                                    name="title"
+                                    [(ngModel)]="cv.title"
+                                    placeholder="Ej. Desarrollador Frontend"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                            focus:border-brand focus:outline-2
+                                            focus:outline-blue-200"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="email" class="mb-2 block text-sm font-semibold">
+                                    Correo electrónico
+                                </label>
+                                <input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    [(ngModel)]="cv.email"
+                                    autocomplete="email"
+                                    placeholder="correo@ejemplo.com"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                            focus:border-brand focus:outline-2
+                                            focus:outline-blue-200"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="phone" class="mb-2 block text-sm font-semibold">
+                                    Teléfono
+                                </label>
+                                <input
+                                    id="phone"
+                                    name="phone"
+                                    type="tel"
+                                    [(ngModel)]="cv.phone"
+                                    autocomplete="tel"
+                                    placeholder="Tu número de contacto"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                            focus:border-brand focus:outline-2
+                                            focus:outline-blue-200"
+                                >
+                            </div>
+
+                            <div>
+                                <label for="city" class="mb-2 block text-sm font-semibold">
+                                    Ciudad y país
+                                </label>
+                                <input
+                                    id="city"
+                                    name="city"
+                                    [(ngModel)]="cv.city"
+                                    placeholder="Ej. Trujillo, Perú"
+                                    class="w-full rounded-lg border border-slate-300 px-3 py-3
+                                            focus:border-brand focus:outline-2
+                                            focus:outline-blue-200"
+                                >
+                            </div>
+                        </div>
+                    </details>
+
+                    <details
+                        class="group rounded-xl border border-slate-200 bg-white
+                                open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-blue-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                badge
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Perfil profesional 
+                                </span>
+
+                                <span class="mt-1 block truncate text-xs text-slate-500">
+                                    {{ cv.profile || 'Describe tu experiencia y objetivos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="border-t border-slate-100 p-5">
+                            <label for="profile" class="mb-2 block text-sm font-semibold">
+                                Resumen profesional
+                            </label>
+                            <textarea
+                                id="profile"
+                                name="profile"
+                                [(ngModel)]="cv.profile"
+                                rows="5"
+                                placeholder="Describe tu experiencia, habílidades y objetivos."
+                                class="w-full resize-y rounded-lg border border-slate-300 px-3 py-3
+                                        focus:border-brand focus:outline-2
+                                        focus:outline-blue-200"
+                            ></textarea>
                         </div>
 
-                        @for (item of cv.experiences; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Experiencia {{ i + 1 }}
-                                </legend>
+                    </details>
 
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-semibold">
-                                        Puesto
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                work
+                            </span>
 
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Experiencia laboral
+                                </span>
+
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.experiences.length }}
+                                    {{ cv.experiences.length === 1 ? 'experiencia añadida' : 'experiencias añadidas' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-180"
+                                aria-hidden="true"
+                            >
+                            expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-100 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">
+                                    Añade tus puestos, responsabilidades y logros.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    (click)="addExperience()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg
+                                        bg-blue-50 px-3 py-2 text-sm font-semibold
+                                        text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                        add
+                                    </span>
+                                        Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.experiences; track item.id; let i = $index) {
+                            <details
+                                open
+                                class="group/record rounded-lg border border-slate-200"
+                            >
+                                <summary
+                                    class="flex cursor-pointer list-none items-center gap-3
+                                        p-4 [&::-webkit-details-marker]:hidden"
+                                >
+                                <span
+                                    class="material-symbols-outlined text-slate-400"
+                                    aria-hidden="true"
+                                >
+                                    work_outline
+                                </span>
+
+                                <span class="min-w-0 flex-1">
+                                    <span class="block truncate text-sm font-semibold">
+                                        {{ item.position || 'Experiencia ' + (i + 1) }}
+                                    </span>
+
+                                    <span class="mt-1 block truncate text-xs text-slate-500">
+                                        {{ item.company || 'Completa la empresa u organización' }}
+                                    </span>
+                                </span>
+
+                                <span
+                                    class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/record:rotate-180"
+                                    aria-hidden="true"
+                                >
+                                    expand_more
+                                </span>
+                                </summary>
+
+                                <div class="space-y-4 border-t border-slate-100 p-4">
+                                    <div class="grid gap-4 sm:grid-cols-2">
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Puesto
                                         <input
                                             [(ngModel)]="item.position"
                                             [name]="'position-' + item.id"
-                                            placeholder="Ej. Asistente administrativo"
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal">
-                                    </label>
+                                            placeholder="Ej. Desarrollador Frontend"
+                                            class="mt-2 w-full rounded-lg border border-slate-200
+                                                bg-slate-50 px-3 py-3 font-normal
+                                                focus:border-brand focus:outline-2
+                                                focus:outline-blue-200"
+                                        >
+                                        </label>
 
-                                    <label class="block text-sm font-semibold">
-                                        Empresa u organización
-
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Empresa u organización
                                         <input
                                             [(ngModel)]="item.company"
                                             [name]="'company-' + item.id"
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal">
-                                    </label>
-
-                                    <div class="grid gap-4 sm:grid-cols-2">
-                                        <label class="block min-w-0 text-sm font-semibold">
-                                            Fecha de inicio
-                                            <input
-                                                type="month"
-                                                [(ngModel)]="item.startDate"
-                                                [name]="'experience-start-' + item.id"
-                                                [max]="!item.current && item.endDate ? item.endDate : null"
-                                                class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
-                                            >
-                                        </label>
-
-                                        <label class="block min-w-0 text-sm font-semibold">
-                                            Fecha de fin
-                                            <input
-                                                type="month"
-                                                [(ngModel)]="item.endDate"
-                                                [name]="'experience-end-' + item.id"
-                                                [disabled]="item.current"
-                                                [min]="item.startDate || null"
-                                                class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal disabled:bg-slate-100"
-                                            >
+                                            class="mt-2 w-full rounded-lg border border-slate-200
+                                                bg-slate-50 px-3 py-3 font-normal
+                                                focus:border-brand focus:outline-2
+                                                focus:outline-blue-200"
+                                        >
                                         </label>
                                     </div>
 
-                                    <label class="flex items-center gap-3 text-sm">
-                                        <input
-                                            type="checkbox"
-                                            [(ngModel)]="item.current"
-                                            [name]="'experience-current-' + item.id"
-                                            class="size-4 accent-brand"
-                                        >
-                                        Trabajo actualmente
-                                    </label>
-                                    
-                                    @if (
-                                        !item.current &&
-                                        item.startDate &&
-                                        item.endDate &&
-                                        item.endDate < item.startDate
-                                    ) {
-                                        <p role="alert" class="text-sm text-red-600">
-                                            La fecha de fin no puede ser anterior a la de inicio.
-                                        </p>
-                                    }
-
-                                    <label class="block text-sm font-semibold">
-                                        Responsabilidades y logros
-                                        <textarea
-                                            [(ngModel)]="item.description"
-                                            [name]="'experience-description-' + item.id"
-                                            rows="4"
-                                            placeholder="Describie tus funciones y principlaes logros."
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
-                                        ></textarea>
+                                <div class="grid gap-4 sm:grid-cols-2">
+                                    <label class="block min-w-0 text-sm font-semibold text-slate-700">
+                                        Fecha de inicio
+                                    <input
+                                        type="month"
+                                        [(ngModel)]="item.startDate"
+                                        [name]="'experience-start-' + item.id"
+                                        [max]="!item.current && item.endDate ? item.endDate : null"
+                                        class="mt-2 w-full min-w-0 rounded-lg border
+                                            border-slate-200 bg-slate-50 px-3 py-3 font-normal"
+                                    >
                                     </label>
 
+                                    <label class="block min-w-0 text-sm font-semibold text-slate-700">
+                                        Fecha de fin
+                                    <input
+                                        type="month"
+                                        [(ngModel)]="item.endDate"
+                                        [name]="'experience-end-' + item.id"
+                                        [disabled]="item.current"
+                                        [min]="item.startDate || null"
+                                        class="mt-2 w-full min-w-0 rounded-lg border
+                                            border-slate-200 bg-slate-50 px-3 py-3
+                                            font-normal disabled:bg-slate-100
+                                            disabled:text-slate-400"
+                                    >
+                                    </label>
+                                </div>
+
+                                <label class="flex min-h-11 items-center gap-3 text-sm text-slate-700">
+                                    <input
+                                        type="checkbox"
+                                        [(ngModel)]="item.current"
+                                        [name]="'experience-current-' + item.id"
+                                        class="size-4 accent-brand"
+                                    >
+                                        Trabajo actualmente aquí
+                                </label>
+
+                                @if (
+                                    !item.current &&
+                                    item.startDate &&
+                                    item.endDate &&
+                                    item.endDate < item.startDate
+                                ) {
+                                    <p role="alert" class="text-sm text-red-600">
+                                        La fecha de fin no puede ser anterior a la de inicio.
+                                    </p>
+                                }
+
+                                <label class="block text-sm font-semibold text-slate-700">
+                                    Responsabilidades y logros
+                                    <textarea
+                                        [(ngModel)]="item.description"
+                                        [name]="'experience-description-' + item.id"
+                                        rows="4"
+                                        placeholder="Describe tus funciones y principales logros."
+                                        class="mt-2 w-full resize-y rounded-lg border
+                                                border-slate-200 bg-slate-50 px-3 py-3
+                                                font-normal focus:border-brand
+                                                focus:outline-2 focus:outline-blue-200"
+                                    ></textarea>
+                                </label>
+
+                                <div class="flex justify-end border-t border-slate-100 pt-3">
                                     <button
                                         type="button"
                                         (click)="removeExperience(item.id)"
-                                        [attr.aria-label]="'Eliminar experiencia' + (i +1)"
-                                        class="rounded-lg px-3 py-2 text-sm
-                                                font-medium text-red-600 hover:bg-red-50"
+                                        [attr.aria-label]="'Eliminar experiencia ' + (i + 1)"
+                                        class="inline-flex min-h-10 items-center gap-2
+                                                rounded-lg px-3 py-2 text-sm
+                                                text-red-600 hover:bg-red-50"
                                     >
-                                        Eliminar experiencia
+                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                        delete
+                                    </span>
+                                        Eliminar
                                     </button>
                                 </div>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavia no has añadido experiencias. 
+                                </div>
+                            </details>
+                            } @empty {
+                            <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                Todavía no has añadido experiencias.
                             </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Educación</h2>
-
-                            <button
-                                type="button"
-                                (click)="addEducation()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
+                            }
                         </div>
+                    </details>
 
-                        @for(item of cv.education; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Formación {{ i + 1 }}
-                                </legend>
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                school
+                            </span>
 
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-semibold">
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Educación
+                                </span>
+
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.education.length }}
+                                    {{ cv.education.length === 1 ? 'formación añadida' : 'formaciones añadidas' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-180"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-100 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">
+                                    Añade tus estudios y formación académica.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    (click)="addEducation()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg
+                                        bg-blue-50 px-3 py-2 text-sm font-semibold
+                                        text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                        add
+                                    </span>
+                                        Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.education; track item.id; let i = $index) {
+                            <details
+                                open
+                                class="group/record rounded-lg border border-slate-200"
+                            >
+                                <summary
+                                    class="flex cursor-pointer list-none items-center gap-3
+                                            p-4 [&::-webkit-details-marker]:hidden"
+                                >
+                                    <span
+                                        class="material-symbols-outlined text-slate-400"
+                                        aria-hidden="true"
+                                    >
+                                        school
+                                    </span>
+
+                                    <span class="min-w-0 flex-1">
+                                        <span class="block truncate text-sm font-semibold">
+                                            {{ item.degree || 'Formación ' + (i + 1) }}
+                                        </span>
+
+                                        <span class="mt-1 block truncate text-xs text-slate-500">
+                                            {{ item.institution || 'Completa la institución' }}
+                                        </span>
+                                    </span>
+
+                                    <span
+                                        class="material-symbols-outlined text-slate-500
+                                            transition-transform group-open/record:rotate-180"
+                                        aria-hidden="true"
+                                    >
+                                        expand_more
+                                    </span>
+                                </summary>
+
+                                <div class="space-y-4 border-t border-slate-100 p-4">
+                                    <label class="block text-sm font-semibold text-slate-700">
                                         Carrera, grado o título
                                         <input
-                                            [(ngModel)]="item.degree"
-                                            [name]="'dregree-' + item.id"
-                                            placeholder="Ej. Ingeniería de Sistemas"
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                        [(ngModel)]="item.degree"
+                                        [name]="'degree-' + item.id"
+                                        placeholder="Ej. Ingeniería de Sistemas"
+                                        class="mt-2 w-full rounded-lg border border-slate-200
+                                                bg-slate-50 px-3 py-3 font-normal
+                                                focus:border-brand focus:outline-2
+                                                focus:outline-blue-200"
                                         >
                                     </label>
 
-                                    <label class="block text-sm font-semibold">
+                                    <label class="block text-sm font-semibold text-slate-700">
                                         Institución
                                         <input
-                                            [(ngModel)]="item.institution"
-                                            [name]="'institution-' + item.id"
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                        [(ngModel)]="item.institution"
+                                        [name]="'institution-' + item.id"
+                                        class="mt-2 w-full rounded-lg border border-slate-200
+                                                bg-slate-50 px-3 py-3 font-normal
+                                                focus:border-brand focus:outline-2
+                                                focus:outline-blue-200"
                                         >
                                     </label>
 
                                     <div class="grid gap-4 sm:grid-cols-2">
-                                        <label class="block min-w-0 text-sm font-semibold">
+                                        <label class="block min-w-0 text-sm font-semibold text-slate-700">
                                             Fecha de inicio
-                                            <input
-                                                type="month"
-                                                [(ngModel)]="item.startDate"
-                                                [name]="'education-start-' + item.id"
-                                                [max]="!item.ongoing && item.endDate ? item.endDate : null"
-                                                class="mt-2 w-full min-w-0 rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                        <input
+                                            type="month"
+                                            [(ngModel)]="item.startDate"
+                                            [name]="'education-start-' + item.id"
+                                            [max]="!item.ongoing && item.endDate ? item.endDate : null"
+                                            class="mt-2 w-full min-w-0 rounded-lg border
+                                                border-slate-200 bg-slate-50 px-3 py-3 font-normal"
                                         >
                                         </label>
 
-                                        <label class="block min-w-0 text-sm font-semibold">
+                                        <label class="block min-w-0 text-sm font-semibold text-slate-700">
                                             Fecha de fin
-                                            <input
-                                                type="month"
-                                                [(ngModel)]="item.endDate"
-                                                [name]="'education-end-' + item.id"
-                                                [disabled]="item.ongoing"
-                                                [min]="item.startDate || null"
-                                                class="mt-2 w-full min-w-0 rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal disabled:bg-slate-100"
-                                            >
+                                        <input
+                                            type="month"
+                                            [(ngModel)]="item.endDate"
+                                            [name]="'education-end-' + item.id"
+                                            [disabled]="item.ongoing"
+                                            [min]="item.startDate || null"
+                                            class="mt-2 w-full min-w-0 rounded-lg border
+                                                border-slate-200 bg-slate-50 px-3 py-3
+                                                font-normal disabled:bg-slate-100
+                                                disabled:text-slate-400"
+                                        >
                                         </label>
                                     </div>
 
-                                    <label class="flex items-center gap-3 text-sm">
-                                        <input 
+                                    <label class="flex min-h-11 items-center gap-3 text-sm text-slate-700">
+                                        <input
                                             type="checkbox"
                                             [(ngModel)]="item.ongoing"
                                             [name]="'education-ongoing-' + item.id"
                                             class="size-4 accent-brand"
                                         >
-                                        Actualmente estoy estudiando
+                                            Actualmente estoy estudiando
                                     </label>
 
                                     @if (
@@ -428,387 +1005,733 @@
                                         </p>
                                     }
 
-                                    <label class="block text-sm font-semibold">
+                                    <label class="block text-sm font-semibold text-slate-700">
                                         Información adicional
                                         <textarea
                                             [(ngModel)]="item.description"
                                             [name]="'education-description-' + item.id"
                                             rows="3"
                                             placeholder="Ej. Estado de los estudios, especialidad o logros."
-                                            class="mt-2 w-full rounded-lg border border-slate-300
-                                                    bg-white px-3 py-3 font-normal"
+                                            class="mt-2 w-full resize-y rounded-lg border
+                                                    border-slate-200 bg-slate-50 px-3 py-3
+                                                    font-normal focus:border-brand
+                                                    focus:outline-2 focus:outline-blue-200"
                                         ></textarea>
                                     </label>
 
-                                    <button
-                                        type="button"
-                                        (click)="removeEducation(item.id)"
-                                        [attr.aria-label]="'Eliminar formación' + (i +1)"
-                                        class="rounded-lg px-3 py-2 text-sm
-                                                font-medium text-red-600 hover:bg-red-50"
-                                    >
-                                        Eliminar formación
-                                    </button>
+                                    <div class="flex justify-end border-t border-slate-100 pt-3">
+                                        <button
+                                            type="button"
+                                            (click)="removeEducation(item.id)"
+                                            [attr.aria-label]="'Eliminar formación ' + (i + 1)"
+                                            class="inline-flex min-h-10 items-center gap-2
+                                                    rounded-lg px-3 py-2 text-sm
+                                                    text-red-600 hover:bg-red-50"
+                                        >
+                                        <span class="material-symbols-outlined" aria-hidden="true">
+                                            delete
+                                        </span>
+                                            Eliminar
+                                        </button>
+                                    </div>
                                 </div>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavia no has añadido estudios. 
-                            </p>
-                        }
-
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Habilidades</h2>
-
-                            <button
-                                type="button"
-                                (click)="addSkill()"
-                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
-                                        font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
+                            </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Todavía no has añadido estudios.
+                                </p>
+                            }
                         </div>
+                    </details>
 
-                        @for (item of cv.skills; track item.id; let i = $index) {
-                            <div class="mt-4">
-                                <label
-                                    [for]="'skill-' + item.id"
-                                    class="mb-2 block text-sm font-semibold">
-                                    Habilidad {{ i + 1 }}
-                                </label>
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                psychology
+                            </span>
 
-                                <div class="flex items-center gap-2">
-                                    <input
-                                        [id]="'skill-' + item.id"
-                                        [name]="'skill-' + item.id"
-                                        [(ngModel)]="item.name"
-                                        placeholder="Ej. Excel, trabajo en equipo o Angular"
-                                        class="min-w-0 flex-1 rounded-lg border
-                                                border-slate-300 px-3 py-3"
-                                    >
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Habilidades
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.skills.length }}
+                                    {{ cv.skills.length === 1 ? 'habilidad añadida' : 'habilidades añadidas' }}
+                                </span>
+                            </span>
 
-                                    <button
-                                        type="button"
-                                        (click)="removeSkill(item.id)"
-                                        [attr.aria-label]="'Eliminar habilidad' + (i + 1)"
-                                        class="min-h-11 rounded-lg px-3 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                    >
-                                        Eliminar
-                                    </button>
-                                </div>
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Incluye competencias técnicas y personales.</p>
+
+                                <button
+                                    type="button"
+                                    (click)="addSkill()"
+                                    class="inline-flex min-h-0 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm
+                                            font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
+                                </button>
                             </div>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Añade tus competencia técnicas y personales. 
-                            </p>
-                        }
-                    </section>
 
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Idiomas</h2>
-
-                            <button
-                                type="button"
-                                (click)="addLanguage()"
-                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
-                                        font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
-                        </div>
-
-                        @for (item of cv.languages; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Idioma {{ i + 1 }}
-                                </legend>
-
-                                <label class="block text-sm font-semibold">
-                                    Idioma
-                                    <input
-                                        [(ngModel)]="item.name"
-                                        [name]="'language-name-' + item.id"
-                                        placeholder="Ej. Español o inglés"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
+                            @for (item of cv.skills; track item.id; let i = $index) {
+                                <div>
+                                    <label
+                                        [for]="'skill-' + item.id"
+                                        class="mb-2 block text-sm font-semibold"
                                     >
-                                </label>
+                                        Habilidad {{ i + 1 }}
+                                    </label>
 
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Nivel
-                                    <select
-                                        [(ngModel)]="item.level"
-                                        [name]="'language-level-' + item.id"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                        <option value="">Sin especificar</option>
-                                        <option value="Nativo">Nativo</option>
-                                        <option value="Básico">Básico</option>
-                                        <option value="Intermedio">Intermedio</option>
-                                        <option value="Avanzado">Avanzado</option>
-                                        <option value="A1">A1</option>
-                                        <option value="A2">A2</option>
-                                        <option value="B1">B1</option>
-                                        <option value="B2">B2</option>
-                                        <option value="C1">C1</option>
-                                        <option value="C2">C2</option>
-                                    </select>
-                                </label>
-
-                                <button
-                                    type="button"
-                                    (click)="removeLanguage(item.id)"
-                                    [attr.aria-label]="'Eliminar idioma' + (i + 1)"
-                                    class="mt-4 rounded-lg px-3 py-3 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                >
-                                    Eliminar idioma
-                                </button>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavía no has añadido idiomas.
-                            </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Cursos y certificaciones</h2>
-
-                            <button
-                                type="button"
-                                (click)="addCertification()"
-                                class="rounded-lg bg-blue-50 px-4 py-3 text-sm
-                                        font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
-                        </div>
-
-                        @for (item of cv.certifications; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Curso o certificación {{ i + 1 }}
-                                </legend>
-
-                                <label class="block text-sm font-semibold">
-                                    Nombre
-                                    <input
-                                        [(ngModel)]="item.name"
-                                        [name]="'certification-name-' + item.id"
-                                        placeholder="Ej. Excel intermedio"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
-
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Institución o entidad
-                                    <input
-                                        [(ngModel)]="item.issuer"
-                                        [name]="'certification-issuer-' + item.id"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
-
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Fecha de obtención
-                                    <input
-                                        type="month"
-                                        [(ngModel)]="item.date"
-                                        [name]="'certification-date-' + item.id"
-                                        class="mt-2 w-full rounded-lg border
-                                                border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
-
-                                <button
-                                    type="button"
-                                    (click)="removeCertification(item.id)"
-                                    [attr.aria-label]="'Eliminar curso o certificación' + (i + 1)"
-                                    class="mt-4 rounded-lg px-3 py-3 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                >
-                                    Eliminar registro
-                                </button>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Todavía no has añadido cursos o certificaciones.
-                            </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">
-                                Proyectos
-                            </h2>
-
-                            <button
-                                type="button"
-                                (click)="addProject()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
-                        </div>
-
-                        @for (item of cv.projects; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Proyecto {{ i + 1 }}
-                                </legend>
-
-                                <div class="space-y-4">
-                                    <label class="block text-sm font-semibold">
-                                        Nombre del proyecto
+                                    <div class="flex items-center gap-2">
                                         <input
+                                            [id]="'skill-' + item.id"
+                                            [name]="'skill-' + item.id"
                                             [(ngModel)]="item.name"
-                                            [name]="'project-name-' + item.id"
-                                            placeholder="Ej. Finora"
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
+                                            placeholder="Ej. Excel, trabajo en equipo o Angular"
+                                            class="min-w-0 flex-1 rounded-lg border
+                                                    border-slate-300 px-3 py-3"
                                         >
-                                    </label>
 
-                                    <label class="block text-sm font-semibold">
-                                        Descripción y aportes
-                                        <textarea
-                                            [(ngModel)]="item.description"
-                                            [name]="'project-description-' + item.id"
-                                            rows="4"
-                                            placeholder="Describie el proyecyo y que realizaste."
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
-                                        ></textarea>
-                                    </label>
-
-                                    <label class="block text-sm font-semibold">
-                                        Tecnologías o herramientas - opcional
-                                        <input
-                                            [(ngModel)]="item.technologies"
-                                            [name]="'project-technologies-' + item.id"
-                                            placeholder="Ej. Angular, TypeScript y Tailwind CSS"
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
+                                        <button
+                                            type="button"
+                                            (click)="removeSkill(item.id)"
+                                            [attr.aria-label]="'Eliminar habilidad' + (i + 1)"
+                                            class="min-h-11 rounded-lg px-3 text-sm
+                                                    text-red-600 hover:bg-red-50"
                                         >
-                                    </label>
-
-                                    <label class="block text-sm font-semibold">
-                                        Enlace - opcional
-                                        <input
-                                            type="url"
-                                            [(ngModel)]="item.url"
-                                            [name]="'project-url-' + item.id"
-                                            placeholder="https://..."
-                                            class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
-                                        >
-                                    </label>
-
-                                    @if (item.url.trim() && !safeUrl(item.url)) {
-                                        <p role="alert" class="text-sm text-red-600">
-                                            Introduce un enlace completo que empiece con https:// o http://.
-                                        </p>
-                                    }
-
-                                    <button
-                                        type="button"
-                                        (click)="removeProject(item.id)"
-                                        [attr.aria-label]="'Eliminar proyecto' + (i + 1)"
-                                        class="rounded-lg px-3 py-2 text-sm
-                                                text-red-600 hover:bg-red-50"
-                                    >
-                                        Eliminar proyecto
-                                    </button>
+                                            <span class="material-symbols-outlined" aria-hidden="true">
+                                                delete
+                                            </span>
+                                        </button>
+                                    </div>
                                 </div>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Puedes añadir proyectos personlaes, académicos o profesionales.
-                            </p>
-                        }
-                    </section>
-
-                    <section class="border-t border-slate-200 pt-6">
-                        <div class="flex flex-wrap items-center justify-between gap-3">
-                            <h2 class="text-lg font-bold">Enlaces profesiones</h2>
-                            <button
-                                type="button"
-                                (click)="addLink()"
-                                class="rounded-lg bg-blue-50 px-4 py-3
-                                        text-sm font-semibold text-brand hover:bg-blue-100"
-                            >
-                                + Añadir
-                            </button>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Añade tus competencia técnicas y personales. 
+                                </p>
+                            }
                         </div>
+                    </details>
 
-                        @for (item of cv.links; track item.id; let i = $index) {
-                            <fieldset class="mt-5 min-w-0 rounded-xl border border-slate-200 p-4">
-                                <legend class="px-2 text-sm font-semibold">
-                                    Enlace {{ i + 1 }}
-                                </legend>
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                translate
+                            </span>
 
-                                <label class="block text-sm font-semibold">
-                                    Nombre del enlace
-                                    <input
-                                        [(ngModel)]="item.label"
-                                        [name]="'link-label-' + item.id"
-                                        placeholder="Ej. LinkedIn, portafolio o GitHub"
-                                        class="mt-2 w-full rounded-lg border
-                                                 border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Idiomas 
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.languages.length }}
+                                    {{ cv.languages.length === 1 ? 'idioma añadido' : 'idiomas añadidos' }}
+                                </span>
+                            </span>
 
-                                <label class="mt-4 block text-sm font-semibold">
-                                    Dirección 
-                                    <input
-                                        type="url"
-                                        [(ngModel)]="item.url"
-                                        [name]="'link-url-' + item.id"
-                                        placeholder="https://..."
-                                        class="mt-2 w-full rounded-lg border
-                                                    border-slate-300 px-3 py-3 font-normal"
-                                    >
-                                </label>
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
 
-                                @if (item.url.trim() && !safeUrl(item.url)) {
-                                    <p role="alert" class="mt-2 text-sm text-red-600">
-                                        Introduce un enlace completo que empiece con https:// o http://. 
-                                    </p>
-                                }
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Indica los idiomas que dominas y tu nivel.</p>
 
                                 <button
                                     type="button"
-                                        (click)="removeLink(item.id)"
-                                        [attr.aria-label]="'Eliminar enlace' + (i + 1)"
-                                        class="mt-4 rounded-lg px-3 py-2 text-sm
-                                                text-red-600 hover:bg-red-50"
+                                    (click)="addLanguage()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm
+                                            font-semibold text-brand hover:bg-blue-100"
                                 >
-                                    Eliminar enlace 
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
                                 </button>
-                            </fieldset>
-                        } @empty {
-                            <p class="mt-4 text-sm text-slate-500">
-                                Añade los enlaces que quieras incluir en tu CV.
-                            </p>
-                        }
-                    </section>
+                            </div>
+
+                            @for (item of cv.languages; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span class="min-w-0 flex-1">
+                                            <span class="min-w-0 flex-1">
+                                                {{ item.name || 'Idioma' + (i + 1) }}
+                                            </span>
+                                            <span class="mt-1 block text-xs text-slate-500">
+                                                {{ item.level || 'Nivel sin especificar' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <div class="grid gap-4 sm:grid-cols-2">
+                                            <label class="block text-sm font-semibold text-slate-700">
+                                                Idioma
+                                                <input
+                                                    [(ngModel)]="item.name"
+                                                    [name]="'language-name-' + item.id"
+                                                    placeholder="Ej. Español o inglés"
+                                                    class="mt-2 w-full rounded-lg border
+                                                            border-slate-300 px-3 py-3 font-normal
+                                                            focus:border-brand focus:outline-2
+                                                            focus:outline-blue-200"
+                                                >
+                                            </label>
+
+                                            <label class="block text-sm font-semibold text-slate-700">
+                                                Nivel
+                                                <select
+                                                    [(ngModel)]="item.level"
+                                                    [name]="'language-level-' + item.id"
+                                                    class="mt-2 w-full rounded-lg border
+                                                            border-slate-300 px-3 py-3 font-normal"
+                                                >
+                                                    <option value="">Sin especificar</option>
+                                                    <option value="Nativo">Nativo</option>
+                                                    <option value="Básico">Básico</option>
+                                                    <option value="Intermedio">Intermedio</option>
+                                                    <option value="Avanzado">Avanzado</option>
+                                                    <option value="A1">A1</option>
+                                                    <option value="A2">A2</option>
+                                                    <option value="B1">B1</option>
+                                                    <option value="B2">B2</option>
+                                                    <option value="C1">C1</option>
+                                                    <option value="C2">C2</option>
+                                                </select>
+                                            </label>
+                                        </div>
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                (click)="removeLanguage(item.id)"
+                                                [attr.aria-label]="'Eliminar idioma' + (i + 1)"
+                                                class="inline-flex min-h-10 items-center gap-2
+                                                         rounded-lg px-3 py-2 text-sm
+                                                            text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">
+                                                    delete
+                                                </span>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 text-sm text-slate-500">
+                                    Todavía no has añadido idiomas.
+                                </p>
+                            }
+                        </div>
+                    </details>
+
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                verified
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Cursos y certficaciones  
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.certifications.length }}
+                                    {{ cv.certifications.length === 1 ? 'registro añadido' : 'registros añadidos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Añade cursos y certificaiones relavantes para tu perfil.</p>
+
+                                <button
+                                    type="button"
+                                    (click)="addCertification()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2 text-sm
+                                            font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">
+                                        add
+                                    </span>
+                                    Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.certifications; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-slate-400"
+                                            aria-hidden="true"
+                                        >
+                                            verified
+                                        </span>
+
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-sm font-semibold">
+                                                {{ item.name || 'Curso o certificación' + (i + 1) }}
+                                            </span>
+
+                                            <span class="mt-1 block truncate text-xs text-slate-500">
+                                                {{ item.issuer || 'Completa la institución o entidad' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <label class="block text-sm font-semibold">
+                                            Nombre del curso o certicación
+                                            <input
+                                                [(ngModel)]="item.name"
+                                                [name]="'certification-name-' + item.id"
+                                                placeholder="Ej. Excel intermedio"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-20"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Institución o entidad
+                                            <input
+                                                [(ngModel)]="item.issuer"
+                                                [name]="'certification-issuer-' + item.id"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-20"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Fecha de obtención
+                                            <input
+                                                type="month"
+                                                [(ngModel)]="item.date"
+                                                [name]="'certification-date-' + item.id"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal"
+                                            >
+                                        </label>
+
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                (click)="removeCertification(item.id)"
+                                                [attr.aria-label]="'Eliminar curso o certificación' + (i + 1)"
+                                                class="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-3 text-sm
+                                                            text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">
+                                                    delete
+                                                </span>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Todavía no has añadido cursos o certificaciones.
+                                </p>
+                            }
+                        </div>
+                    </details>
+                    
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                folder_open
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Proyectos 
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.projects.length }} 
+                                    {{ cv.projects.length === 1 ? 'proyecto añadido' : 'proyectos añadidos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">
+                                    Incluye proyectos personales, académicos o prefesionales.
+                                </p>
+
+                                <button
+                                    type="button"
+                                    (click)="addProject()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-3 py-2
+                                            text-sm font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.projects; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span
+                                            class="material-symbols-outlined text-slate-400"
+                                            aria-hidden="true"
+                                        >
+                                            folder
+                                        </span>
+
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-sm font-semibold">
+                                                {{ item.name || 'Proyecto' + (i + 1) }}
+                                            </span>
+                                            <span class="mt-1 block truncate text-xs text-slate-500">
+                                                {{ item.technologies || 'Describe el proyecto y tus aportes' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Nombre del proyecto
+                                            <input
+                                                [(ngModel)]="item.name"
+                                                [name]="'project-name-' + item.id"
+                                                placeholder="Ej. Finora"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Descripción y aportes
+                                            <textarea
+                                                [(ngModel)]="item.description"
+                                                [name]="'project-description-' + item.id"
+                                                rows="4"
+                                                placeholder="Describie el proyecyo y que realizaste."
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            ></textarea>
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Tecnologías o herramientas - opcional
+                                            <input
+                                                [(ngModel)]="item.technologies"
+                                                [name]="'project-technologies-' + item.id"
+                                                placeholder="Ej. Angular, TypeScript y Tailwind CSS"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Enlace - opcional
+                                            <input
+                                                type="url"
+                                                [(ngModel)]="item.url"
+                                                [name]="'project-url-' + item.id"
+                                                placeholder="https://..."
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        @if (item.url.trim() && !safeUrl(item.url)) {
+                                            <p role="alert" class="text-sm text-red-600">
+                                                Introduce un enlace completo que empiece con https:// o http://.
+                                            </p>
+                                        }
+
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                (click)="removeProject(item.id)"
+                                                [attr.aria-label]="'Eliminar proyecto' + (i + 1)"
+                                                class="inline-flex min-h-10 items-center gap-1 rounded-lg px-3 py-2 text-sm
+                                                        text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                                Eliminar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Puedes añadir proyectos personlaes, académicos o profesionales.
+                                </p>
+                            }
+                        </div>
+                    </details>
+
+                
+                    <details
+                        class="group/section rounded-xl border border-slate-200
+                                bg-white open:border-blue-200 open:shadow-sm"
+                    >
+                        <summary
+                            class="flex cursor-pointer list-none items-center gap-3
+                                    rounded-xl p-5 [&::-webkit-details-marker]:hidden"
+                        >
+                            <span
+                                class="material-symbols-outlined rounded-lg
+                                        bg-indigo-50 p-2 text-brand"
+                                aria-hidden="true"
+                            >
+                                link
+                            </span>
+
+                            <span class="min-w-0 flex-1">
+                                <span class="block text-base font-semibold text-slate-900">
+                                    Enlaces profesionales 
+                                </span>
+                                <span class="mt-1 block text-xs text-slate-500">
+                                    {{ cv.links.length }}
+                                    {{ cv.links.length === 1 ? 'enlace añadido' : 'enlaces añadidos' }}
+                                </span>
+                            </span>
+
+                            <span
+                                class="material-symbols-outlined text-slate-500
+                                        transition-transform group-open/section:rotate-100"
+                                aria-hidden="true"
+                            >
+                                expand_more
+                            </span>
+                        </summary>
+
+                        <div class="space-y-4 border-t border-slate-200 p-5">
+                            <div class="flex flex-wrap items-center justify-between gap-3">
+                                <p class="text-xs text-slate-500">Añade LinkedIn, tu portafolio u otros enlaces.</p>
+                                <button
+                                    type="button"
+                                    (click)="addLink()"
+                                    class="inline-flex min-h-10 items-center gap-1 rounded-lg bg-blue-50 px-4 py-3
+                                            text-sm font-semibold text-brand hover:bg-blue-100"
+                                >
+                                    <span class="material-symbols-outlined" aria-hidden="true">add</span>
+                                    Añadir
+                                </button>
+                            </div>
+
+                            @for (item of cv.links; track item.id; let i = $index) {
+                                <details
+                                    open
+                                    class="group/record rounded-lg border border-slate-200"
+                                >
+                                    <summary
+                                        class="flex cursor-pointer list-none items-center gap-3
+                                                p-4 [&::-webkit-details-marker]:hidden"
+                                    >
+                                        <span class="min-w-0 flex-1">
+                                            <span class="block truncate text-sm font-semibold">
+                                                {{ item.label || 'Enlace' + (i + 1) }}
+                                            </span>
+
+                                            <span class="mt-1 block truncate text-xs text-slate-500">
+                                                {{ item.url || 'Añade la dirección del enlace' }}
+                                            </span>
+                                        </span>
+
+                                        <span
+                                            class="material-symbols-outlined text-slate-500
+                                                    transition-transform group-open/record:rotate-180"
+                                            aria-hidden="true"
+                                        >
+                                            expand_more
+                                        </span>
+                                    </summary>
+
+                                    <div class="space-y-4 border-t border-slate-100 p-4">
+                                        <label class="block text-sm font-semibold text-slate-700">
+                                            Nombre del enlace
+                                            <input
+                                                [(ngModel)]="item.label"
+                                                [name]="'link-label-' + item.id"
+                                                placeholder="Ej. LinkedIn, portafolio o GitHub"
+                                                class="mt-2 w-full rounded-lg border
+                                                        border-slate-300 px-3 py-3 font-normal
+                                                        focus:border-brand focus:outline-2
+                                                        focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        <label class="mt-4 block text-sm font-semibold text-slate-700">
+                                            Dirección 
+                                            <input
+                                                type="url"
+                                                [(ngModel)]="item.url"
+                                                [name]="'link-url-' + item.id"
+                                                placeholder="https://..."
+                                                class="mt-2 w-full rounded-lg border
+                                                            border-slate-300 px-3 py-3 font-normal
+                                                            focus:border-brand focus:outline-2
+                                                            focus:outline-blue-200"
+                                            >
+                                        </label>
+
+                                        @if (item.url.trim() && !safeUrl(item.url)) {
+                                            <p role="alert" class="mt-2 text-sm text-red-600">
+                                                Introduce un enlace completo que empiece con https:// o http://. 
+                                            </p>
+                                        }
+
+                                        <div class="flex justify-end border-t border-slate-100 pt-3">
+                                            <button
+                                                type="button"
+                                                    (click)="removeLink(item.id)"
+                                                    [attr.aria-label]="'Eliminar enlace' + (i + 1)"
+                                                    class="inline-flex min-h-10 items-center gap-2 rounded-lg px-3 py-2 text-sm
+                                                            text-red-600 hover:bg-red-50"
+                                            >
+                                                <span class="material-symbols-outlined" aria-hidden="true">delete</span>
+                                                Eliminar 
+                                            </button>
+                                        </div>
+                                    </div>
+                                </details>
+                            } @empty {
+                                <p class="rounded-lg bg-slate-50 p-4 text-sm text-slate-500">
+                                    Añade los enlaces que quieras incluir en tu CV.
+                                </p>
+                            }
+                        </div>
+                    </details>
+                    </div>
                 </form>
             </section>
 
-            <section aria-label="Vista previa del currículum" class="cv-preview min-w-0 lg:sticky lg:top-6">
+            <section 
+                aria-label="Vista previa del currículum" 
+                class="cv-preview min-w-0 lg:sticky lg:top-6"
+                [class.mobile-panel-hidden]="mobileView !== 'preview'"
+            >
                 <p class="preview-label mb-3 text-sm text-slate-500">
                     Plantilla {{ template === 'modern' ? 'Moderna' : 'Clásica' }}
                 </p>

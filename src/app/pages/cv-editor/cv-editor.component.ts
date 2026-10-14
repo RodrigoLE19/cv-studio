@@ -39,16 +39,72 @@ export class CvEditorComponent implements OnInit, OnDestroy {
 
   saveStatus = 'Sin cambios pendientes';
 
+  activeTab: 'content' | 'design' = 'content';
+  mobileView: 'edit' | 'preview' = 'edit';
+
+  selectTemplate(value: 'classic' | 'modern'): void {
+    this.template = value;
+    this.scheduleSave();
+  }
+
   design: CvDesign = {
     color: 'blue',
     font: 'sans',
   };
+
+  readonly colorOptions: {
+    key: CvDesign['color'];
+    label: string;
+  }[] = [
+    { key: 'blue', label: 'Azul' },
+    { key: 'teal', label: 'Verde petróleo' },
+    { key: 'purple', label: 'Morado' },
+    { key: 'slate', label: 'Gris oscuro' },
+  ];
+
+  selectColor(value: CvDesign['color']): void {
+    this.design.color = value;
+    this.scheduleSave();
+  }
+
+  get selectedColorLabel(): string {
+    return this.colorOptions.find(
+      (option) => option.key === this.design.color,
+    )?.label ?? 'Azul';
+  }
 
   readonly palettes = {
     blue: { accent: '#0854d5', soft: '#eff6ff' },
     teal: { accent: '#0f766e', soft: '#f0fdfa' },
     purple: { accent: '#7e22ce', soft: '#faf5ff' },
     slate: { accent: '#334155', soft: '#f1f5f9' },
+  }
+
+  readonly fontOptions: {
+    key: CvDesign['font'];
+    label: string;
+    description: string;
+  }[] = [
+    {
+      key: 'sans',
+      label: 'Arial',
+      description: 'Clara y sencilla',
+    },
+    {
+      key: 'serif',
+      label: 'Georgia',
+      description: 'Estilo clásico',
+    },
+    {
+      key: 'mono',
+      label: 'Courier New',
+      description: 'Estilo técnico',
+    },
+  ];
+
+  selectFont(value: CvDesign['font']): void {
+    this.design.font = value;
+    this.scheduleSave();
   }
 
   readonly fonts = {
