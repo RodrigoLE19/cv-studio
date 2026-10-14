@@ -8,7 +8,7 @@ export const routes: Routes = [
         path: '',
         pathMatch: 'full',
         component: MyCvsComponent,
-        title: 'Mis CV | CV Studio',
+        title: 'CV Studio',
     },
     {
         path: 'plantillas',
