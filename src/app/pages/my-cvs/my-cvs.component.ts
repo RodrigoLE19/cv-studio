@@ -108,6 +108,17 @@ export class MyCvsComponent implements OnInit {
     }
   }
 
+  previewColor(document: CvDocument): string {
+    const colors = {
+      blue: '#0854d5',
+      teal: '#0f766e',
+      purple: '#7e22ce',
+      slate: '#334155',
+    };
+
+    return colors[document.design?.color ?? 'blue'];
+  }
+
   private load(): void {
     try {
       this.documents.set(
