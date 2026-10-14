@@ -1,58 +1,136 @@
 <div class="cv-editor-page min-h-dvh bg-canvas">
     <header
-        class="editor-header flex flex-wrap items-center justify-between gap-4
-                border-b border-slate-200 bg-white px-5 py-5 sm:px-10"
+        class="editor-header border-b border-slate-200 bg-white"
     >
-        <a routerLink="/" class="text-xl font-bold text-brand">
-            CV Studio 
-        </a>
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center
+                    justify-between gap-4 px-5 py-4 sm:px-10"
+        >
 
-        <div class="flex flex-wrap items-center gap-3">
-            <a
-                routerLink="/"
-                class="rounded-lg px-4 py-3 text-sm font-semibold text-slate-600"
-            >
-                ← Mis CV
+            <a routerLink="/" class="flex items-center gap-3">
+                <span
+                    class="material-symbols-outlined rounded-lg
+                         bg-brand p-2 text-white"
+                    aria-hidden="true"
+                >
+                    description
+                </span>
+
+                <span class="text-lg font-bold text-slate-900">
+                    CV Studio
+                </span>
             </a>
 
-            <button
-                type="button"
-                (click)="changeTemplate()"
-                class="rounded-lg bg-blue-50 px-4 py-3
-                        text-sm font-semibold text-brand"
+            <nav
+                aria-label="Navegación principal"
+                class="flex items-center gap-2 text-sm"
             >
-                Cambiar a {{ template === 'classic' ? 'Moderna' : 'Clásica' }}
-            </button>
+                <a
+                    routerLink="/"
+                    class="rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50"
+                >
+                    Mis CV
+                </a>
 
-            <button
-                type="button"
-                (click)="exportPdf()"
-                class="rounded-lg bg-brand px-5 py-3
-                        text-sm font-semibold text-white hover:bg-brand-dark"
-            >
-                Exportar PDF
-            </button>
-
+                <span
+                    aria-current="page"
+                    class="rounded-lg bg-indigo-100 px-3 py-2
+                            font-semibold text-slate-800"
+                >
+                    Editor
+                </span>
+            </nav>
         </div>
-        
     </header>
 
     <main class="editor-main mx-auto max-w-7xl px-5 py-8 sm:px-10">
-        <div class="editor-heading mb-6">
-            <h1 class="text-2xl font-bold">Editor de currículum</h1>
-            
-            <p
-                role="status"
-                class="mt-2 text-sm text-slate-600">
-                {{ saveStatus }}
-            </p>
-            <p class="mt-2 text-sm text-slate-500">
-                Completa tus datos y observa los cambios en la vista previa.
-            </p>
+        <div class="editor-heading mb-6 rounded-xl border
+                    border-slate-200 bg-white p-4"
+        >
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="min-w-0">
+                    <a
+                        routerLink="/"
+                        class="mb-2 inline-flex items-center gap-1
+                                text-xs text-slate-500 hover:text-brand"
+                    >
+                        <span class="material-symbols-outlined" aria-hidden="true">
+                            arrow_back
+                        </span>
+                        volver a Mis CV
+                    </a>
+
+                    <h1 class="wrap-break-word text-lg font-semibold text-slate-900">
+                        {{ document?.name || 'Editor de currículum' }}
+                    </h1>
+
+                    <p
+                        role="status"
+                        class="mt-2 flex items-center gap-2 text-xs text-slate-600"
+                    >
+                        <span class="material-symbols-outlined" aria-hidden="true">
+                            save
+                        </span>
+                        {{ saveStatus }}
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    (click)="exportPdf()"
+                    class="inline-flex min-h-11 items-center justify-center
+                            gap-2 rounded-lg bg-brand px-4 py-3
+                            text-sm font-semibold text-white hover:bg-brand-dark"
+                >
+                    <span class="material-symbols-outlined" aria-hidden="true">
+                        download
+                    </span>
+                    Exportar PDF
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="mobile-view-switch mb-5 grid grid-cols-2 gap-2
+                    rounded-xl border border-slate-200 bg-white p-2 lg:hidden"
+            role="group"
+            aria-label="Vista del editor"
+        >
+            <button
+                type="button"
+                (click)="mobileView = 'edit'"
+                [attr.aria-pressed]="mobileView === 'edit'"
+                [class.bg-brand]="mobileView === 'edit'"
+                [class.text-white]="mobileView === 'edit'"
+                class="flex min-h-11 items-center justify-center gap-2
+                        rounded-lg px-3 py-2 text-sm font-semibold"
+            >
+                <span class="material-symbols-outlined" aria-hidden="true">
+                    edit
+                </span>
+                Editar
+            </button>
+
+            <button
+                type="button"
+                (click)="mobileView = 'preview'"
+                [attr.aria-pressed]="mobileView === 'preview'"
+                [class.bg-brand]="mobileView === 'preview'"
+                [class.text-white]="mobileView === 'preview'"
+                class="flex min-h-11 items-center justify-center gap-2
+                        rounded-lg px-3 py-2 text-sm font-semibold"
+            >
+                <span class="material-symbols-outlined" aria-hidden="true">
+                    visibility
+                </span>
+                Vista previa
+            </button>
         </div>
 
         <div class="editor-layout grid items-start gap-8 lg:grid-cols-[1fr_1.3fr]">
-            <section class="editor-form min-w-0">
+            <section 
+                class="editor-form min-w-0"
+                [class.mobile-panel-hidden]="mobileView !== 'edit'"
+            >
                 <div
                     class="mb-5 grid grid-cols-2 gap-2 rounded-xl bg-white p-2"
                     role="tablist"
@@ -1649,7 +1727,11 @@
                 </form>
             </section>
 
-            <section aria-label="Vista previa del currículum" class="cv-preview min-w-0 lg:sticky lg:top-6">
+            <section 
+                aria-label="Vista previa del currículum" 
+                class="cv-preview min-w-0 lg:sticky lg:top-6"
+                [class.mobile-panel-hidden]="mobileView !== 'preview'"
+            >
                 <p class="preview-label mb-3 text-sm text-slate-500">
                     Plantilla {{ template === 'modern' ? 'Moderna' : 'Clásica' }}
                 </p>

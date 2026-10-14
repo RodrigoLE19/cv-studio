@@ -40,6 +40,7 @@ export class CvEditorComponent implements OnInit, OnDestroy {
   saveStatus = 'Sin cambios pendientes';
 
   activeTab: 'content' | 'design' = 'content';
+  mobileView: 'edit' | 'preview' = 'edit';
 
   selectTemplate(value: 'classic' | 'modern'): void {
     this.template = value;
